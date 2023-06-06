@@ -9,7 +9,7 @@
 			xmlns:vlc="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia">
 	<DockPanel>
 		<Button Command="{Binding OpenFileCommand}" DockPanel.Dock="Top">Open Video</Button>
-		<ComboBox Items="{Binding Monitors}" SelectedItem="{Binding SelectedMonitor}" DockPanel.Dock="Top"/>
+		<ComboBox ItemsSource="{Binding Monitors}" SelectedItem="{Binding SelectedMonitor}" DockPanel.Dock="Top"/>
 		<Slider Value="{Binding Volume}" DockPanel.Dock="Top" Minimum="0" Maximum="100"/>
 	</DockPanel>
 </Window>

@@ -10,14 +10,7 @@ namespace DeLightNew {
         private int count;
         public MainWindow() {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
             DataContext = new MainWindowViewModel(this);
-        }
-
-        private void InitializeComponent() {
-            AvaloniaXamlLoader.Load(this);
         }
 
         protected override void OnClosed(EventArgs e)

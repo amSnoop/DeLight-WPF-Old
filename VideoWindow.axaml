@@ -8,7 +8,7 @@
         Title="VideoWindow">
 	<Grid x:Name="grid">
 		<lvs:VideoView x:Name="VideoViewControl" >
-		    <Canvas Background="Transparent" x:Name="Overlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+		    <Canvas x:Name="Overlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 		</lvs:VideoView>
     </Grid>
 </Window>
