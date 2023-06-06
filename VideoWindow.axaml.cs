@@ -25,8 +25,8 @@ namespace DeLightNew {
             this.AttachDevTools();
 #endif
             VideoViewControl.MediaPlayer = new MediaPlayer(libVLC);
-            //Overlay.PointerEnter += OnMove;
-            //Overlay.Focusable = true;
+            Overlay.PointerEnter += OnMove;
+            Overlay.Focusable = true;
             Focusable = false;
         }
         public VideoWindow() {
