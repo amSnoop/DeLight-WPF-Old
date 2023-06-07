@@ -7,7 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Title="VideoWindow">
 	<Grid x:Name="grid">
-		<lvs:VideoView x:Name="VideoViewControl" >
+		<lvs:VideoView x:Name="VideoViewControl" Opacity ="0">
 		    <Canvas x:Name="Overlay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 		</lvs:VideoView>
     </Grid>

@@ -25,7 +25,8 @@ namespace DeLightNew {
         public VideoWindow(LibVLC libVLC) {
             InitializeComponent();
             VideoViewControl.MediaPlayer = new MediaPlayer(libVLC);
-            Overlay.PointerEntered += OnMove;
+            var transparentCursor = new Cursor(new Bitmap("C:\\Untitled.png"), new PixelPoint(0, 0));
+            Overlay.Cursor = transparentCursor;
             Overlay.Focusable = true;
             Focusable = false;
         }
@@ -55,14 +56,6 @@ namespace DeLightNew {
         protected override void OnOpened(EventArgs e) {
             base.OnOpened(e);
             Play();
-        }
-        protected void OnMove(object? sender, PointerEventArgs e)
-        {
-            var transparentCursor = new Cursor(new Bitmap("..\\..\\..\\transparentCursor.png"), new PixelPoint(0, 0));
-            Overlay.Cursor = transparentCursor;
-            //VideoViewControl.Cursor = transparentCursor;
-            //Cursor = transparentCursor;
-            e.Handled = true;
         }
         private void FadeInVideo()
         {
