@@ -22,7 +22,6 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-rc1.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="LibVLCSharp" Version="3.7.0" />
-    <PackageReference Include="LibVLCSharp.Avalonia.Unofficial" Version="3.6.6" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.18" />
   </ItemGroup>
