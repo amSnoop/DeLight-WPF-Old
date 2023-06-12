@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -20,7 +22,10 @@ namespace DeLightWPF {
     public partial class MainWindow : Window {
 
         private int count;
-        public MainWindow() {
+
+        private bool isDragging;
+        public MainWindow()
+        {
             InitializeComponent();
             DataContext = new MainWindowViewModel(this);
         }
@@ -41,6 +46,44 @@ namespace DeLightWPF {
             }
             else
                 count = 0;
+        }
+
+
+        private void Slider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = true;
+            var slider = (Slider)sender;
+            UpdateSliderValue(slider, e);
+            slider.CaptureMouse();
+        }
+
+        private void Slider_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                var slider = (Slider)sender;
+                UpdateSliderValue(slider, e);
+            }
+        }
+
+        private void Slider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = false;
+            var slider = (Slider)sender;
+            UpdateSliderValue(slider, e);
+            slider.ReleaseMouseCapture();
+        }
+
+        private void UpdateSliderValue(Slider slider, MouseEventArgs e)
+        {
+            var point = e.GetPosition(slider);
+            var ratio = point.X / slider.ActualWidth;
+            var value = ratio * (slider.Maximum - slider.Minimum) + slider.Minimum;
+            if(value < slider.Minimum)
+                value = slider.Minimum;
+            else if(value > slider.Maximum)
+                value = slider.Maximum;
+            slider.Value = value;
         }
     }
 }

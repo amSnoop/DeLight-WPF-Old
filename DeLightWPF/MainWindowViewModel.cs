@@ -7,16 +7,35 @@ using System.Windows;
 using System.Windows.Forms;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace DeLightWPF {
-    public class MainWindowViewModel : ObservableObject {
-        private readonly Window _window;
-        private string _selectedMonitor;
+    public partial class MainWindowViewModel : ObservableObject {
+        private readonly MainWindow _window;
+        private string _selectedMonitor = "";
         private VideoWindow _videoWindow;
+        private VideoWindow? _newVideoWindow;
 
-        private int _volume = 20;
+        [ObservableProperty]
+        private double fadeTime = 5;
 
-        public int Volume
+        private double _volume = .2;
+
+        
+        private double _opacity = 1;
+
+        public double Opacity
+        {
+            get => _opacity;
+            set
+            {
+                SetProperty(ref _opacity, value);
+                _videoWindow.VideoViewControl.Opacity = value;
+            }
+        }
+
+        public double Volume
         {
             get => _volume;
             set
@@ -36,7 +55,7 @@ namespace DeLightWPF {
             set => SetProperty(ref _selectedMonitor, value);
         }
 
-        public MainWindowViewModel(Window window) {
+        public MainWindowViewModel(MainWindow window) {
             _window = window;
             _videoWindow = new();
             _screenObjects = Screen.AllScreens.ToList();
@@ -44,8 +63,12 @@ namespace DeLightWPF {
             SelectedMonitor = Monitors.FirstOrDefault() ?? "";
 
             OpenFileCommand = new AsyncRelayCommand(OpenFile);
+            _videoWindow.Activated += ReturnMainWindowFocus;
         }
-
+        public void ReturnMainWindowFocus(object? sender, EventArgs e)
+        {
+            _window.Activate();
+        }
         public void CloseVideoPlayback()
         {
             _videoWindow.Close();
@@ -57,28 +80,59 @@ namespace DeLightWPF {
 
         public ICommand OpenFileCommand { get; }
 
-        private async Task OpenFile() {
+        private async Task OpenFile()
+        {
             var dialog = new Microsoft.Win32.OpenFileDialog { Multiselect = false };
             var result = dialog.ShowDialog(_window);
-            if (result.HasValue && result.Value) {
-                _videoWindow.MediaUri = new Uri(dialog.FileName);
+            if (result.HasValue && result.Value)
+            {
+                _newVideoWindow = new VideoWindow
+                {
+                    MediaUri = new Uri(dialog.FileName)
+                };
                 var selectedScreenIndex = Monitors.IndexOf(SelectedMonitor);
                 var selectedScreen = _screenObjects[selectedScreenIndex];
-                _videoWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-                _videoWindow.Top = selectedScreen.Bounds.Top;
-                _videoWindow.Left = selectedScreen.Bounds.Left;
-                if(_videoWindow.IsVisible)
-                    _videoWindow.Play(Volume);
-                else
-                    _videoWindow.Show();
-                _videoWindow.WindowState = WindowState.Maximized;
-                _videoWindow.WindowStyle = WindowStyle.None;
-                _videoWindow.ShowInTaskbar = false;
-                _videoWindow.Topmost = true;
-                _videoWindow.ResizeMode = ResizeMode.NoResize;
+                _newVideoWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+                _newVideoWindow.Top = selectedScreen.Bounds.Top;
+                _newVideoWindow.Left = selectedScreen.Bounds.Left;
+                _newVideoWindow.VideoViewControl.Volume = Volume;
+                _newVideoWindow.WindowStyle = WindowStyle.None;
+                _newVideoWindow.Show();
                 _window.Focus();
+                _newVideoWindow.WindowState = WindowState.Maximized;
+                _newVideoWindow.ShowInTaskbar = false;
+                _newVideoWindow.Topmost = true;
+                _newVideoWindow.ResizeMode = ResizeMode.NoResize;
+                _newVideoWindow.Opacity = 0;
+
+                _newVideoWindow.Play();
+
+                await FadeInOut();
+
+                _videoWindow?.Close();
+
+                _videoWindow = _newVideoWindow;
+                _newVideoWindow = null;
             }
         }
 
+        private Task FadeInOut()
+        {
+            var duration = TimeSpan.FromSeconds(FadeTime);
+            var fadeIn = new DoubleAnimation(0, 1, duration);
+            var fadeOutAudio = new DoubleAnimation(_window.VolumeSlider.Value, 0.0, duration);
+
+            var tcs = new TaskCompletionSource<bool>();
+
+            fadeIn.Completed += (s, e) =>
+            {
+                tcs.SetResult(true);
+            };
+
+            _newVideoWindow?.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+            _videoWindow?.VideoViewControl.BeginAnimation(MediaElement.VolumeProperty, fadeOutAudio);
+
+            return tcs.Task;
+        }
     }
 }

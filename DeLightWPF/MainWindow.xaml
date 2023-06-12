@@ -9,6 +9,9 @@
     <DockPanel>
         <Button Command="{Binding OpenFileCommand}" DockPanel.Dock="Top">Open Video</Button>
         <ComboBox ItemsSource="{Binding Monitors}" SelectedItem="{Binding SelectedMonitor}" DockPanel.Dock="Top"/>
-        <Slider Value="{Binding Volume}" DockPanel.Dock="Top" Minimum="0" Maximum="100"/>
+        <Slider Value="{Binding Volume}" x:Name="VolumeSlider" DockPanel.Dock="Top" Minimum="0" Maximum="1" TickFrequency=".01" PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown" PreviewMouseMove="Slider_PreviewMouseMove" PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp" Background="Black"/>
+        <TextBlock Text="{Binding Volume}" DockPanel.Dock="Top"/>
+        <Slider Value="{Binding Opacity}" DockPanel.Dock="Top" Minimum="0" Maximum="1" TickFrequency=".01" PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown" PreviewMouseMove="Slider_PreviewMouseMove" PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp" Background="Black"/>
+        <TextBlock Text="{Binding Opacity}" DockPanel.Dock="Top"/>
     </DockPanel>
 </Window>

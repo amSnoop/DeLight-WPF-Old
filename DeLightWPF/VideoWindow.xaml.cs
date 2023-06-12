@@ -1,24 +1,19 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 
 namespace DeLightWPF {
     public partial class VideoWindow : Window {
         public Uri? MediaUri { get; set; }
 
-        public VideoWindow(Uri mediaUri) {
+        public VideoWindow(Uri mediaUri)
+        {
             InitializeComponent();
             MediaUri = mediaUri;
-            Focusable = false;
-            Cursor = Cursors.None;
         }
 
         public VideoWindow() {
             InitializeComponent();
-            Focusable = false;
         }
 
         protected override void OnClosed(EventArgs e) {
@@ -33,8 +28,7 @@ namespace DeLightWPF {
             Hide();
         }
 
-        public void Play(double volume = 0.2) {
-            VideoViewControl.Volume = volume;
+        public void Play() {
             VideoViewControl.Source = MediaUri;
             VideoViewControl.Play();
         }
