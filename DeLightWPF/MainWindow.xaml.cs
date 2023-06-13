@@ -16,8 +16,8 @@ namespace DeLightWPF {
 
         private IDeviceNotifier usbDeviceNotifier;
 
-        private readonly int vendor_id = 0x1234;
-        private readonly int product_id = 0x5678;
+        private readonly int vendor_id = 0x1069;
+        private readonly int product_id = 0x1040;
 
         public MainWindow() {
             InitializeComponent();
