@@ -8,7 +8,7 @@ namespace DeLightWPF
 {
     public class UsbHandler
     {
-        public static UsbDeviceFinder MyUsbFinder = new UsbDeviceFinder(1234, 5678); // replace with your VID and PID
+        public static UsbDeviceFinder MyUsbFinder { get; private set; } = new UsbDeviceFinder(1234, 5678); // replace with your VID and PID
 
         public static void Main(string[] args)
         {
@@ -22,7 +22,7 @@ namespace DeLightWPF
 
             // Use the device.
             IUsbDevice? wholeUsbDevice = usbDevice as IUsbDevice;
-            if (!ReferenceEquals(wholeUsbDevice, null))
+            if (wholeUsbDevice is not null)
             {
                 // Select config #1
                 wholeUsbDevice.SetConfiguration(1);
@@ -31,15 +31,23 @@ namespace DeLightWPF
                 wholeUsbDevice.ClaimInterface(0);
             }
 
-            // Send data
-            byte[] writeBuffer = new byte[1] { 0x00 }; // replace with your data
-            int bytesWritten;
-            usbDevice.ControlTransfer(UsbCtrlFlags.RequestType_Vendor, 0x01, 0x02, 0x0000, writeBuffer, writeBuffer.Length, out bytesWritten);
+            // Create the writer and reader using the correct endpoint.
+            UsbEndpointWriter writer = usbDevice.OpenEndpointWriter(WriteEndpointID.Ep01);
+            UsbEndpointReader reader = usbDevice.OpenEndpointReader(ReadEndpointID.Ep02);
+
+            // Write data
+            byte[] writeBuffer = new byte[1024];
+            ErrorCode ec = writer.Write(writeBuffer, 2000, out int _);
+            if (ec != ErrorCode.None) {
+                Console.WriteLine("Error writing data: {0}", ec);
+            }
 
             // Read data
             byte[] readBuffer = new byte[1024];
-            int bytesRead;
-            usbDevice.ControlTransfer(UsbCtrlFlags.RequestType_Vendor | UsbCtrlFlags.Direction_In, 0x01, 0x02, 0x0000, readBuffer, readBuffer.Length, out bytesRead);
+            ec = reader.Read(readBuffer, 2000, out int _);
+            if (ec != ErrorCode.None) {
+                Console.WriteLine("Error reading data: {0}", ec);
+            }
 
             // Close the device.
             usbDevice.Close();

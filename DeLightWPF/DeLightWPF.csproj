@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
-    <PackageReference Include="LibUsbDotNet" Version="2.2.29" />
+    <PackageReference Include="LibUsbDotNet" Version="2.2.8" />
   </ItemGroup>
 
 </Project>

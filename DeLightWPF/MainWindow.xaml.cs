@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LibUsbDotNet.DeviceNotify;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DeLightWPF {
     /// <summary>
@@ -24,10 +13,31 @@ namespace DeLightWPF {
         private int count;
 
         private bool isDragging;
-        public MainWindow()
-        {
+
+        private IDeviceNotifier usbDeviceNotifier;
+
+        private readonly int vendor_id = 0x1234;
+        private readonly int product_id = 0x5678;
+
+        public MainWindow() {
             InitializeComponent();
             DataContext = new MainWindowViewModel(this);
+
+            usbDeviceNotifier = DeviceNotifier.OpenDeviceNotifier();
+            usbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent;
+        }
+
+        private void OnDeviceNotifyEvent(object? sender, DeviceNotifyEventArgs e) {
+            if (e.Device.IdVendor == vendor_id && e.Device.IdProduct == product_id) {
+                if (e.EventType == EventType.DeviceArrival) {
+                    Console.WriteLine("Device connected.");
+                    // handle connection event
+                }
+                else if (e.EventType == EventType.DeviceRemoveComplete) {
+                    Console.WriteLine("Device disconnected.");
+                    // handle disconnection event
+                }
+            }
         }
 
         protected override void OnClosed(EventArgs e) {
