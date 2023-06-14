@@ -4,11 +4,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace DeLightWPF {
+namespace DeLightWPF
+{
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
+    public partial class MainWindow : Window
+    {
 
         private int count;
 
@@ -19,7 +21,8 @@ namespace DeLightWPF {
         private readonly int vendor_id = 0x1069;
         private readonly int product_id = 0x1040;
 
-        public MainWindow() {
+        public MainWindow()
+        {
             InitializeComponent();
             DataContext = new MainWindowViewModel(this);
 
@@ -27,29 +30,54 @@ namespace DeLightWPF {
             usbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent;
         }
 
-        private void OnDeviceNotifyEvent(object? sender, DeviceNotifyEventArgs e) {
-            if (e.Device.IdVendor == vendor_id && e.Device.IdProduct == product_id) {
-                if (e.EventType == EventType.DeviceArrival) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private void OnDeviceNotifyEvent(object? sender, DeviceNotifyEventArgs e)
+        {
+            if (e.Device.IdVendor == vendor_id && e.Device.IdProduct == product_id)
+            {
+                if (e.EventType == EventType.DeviceArrival)
+                {
                     Console.WriteLine("Device connected.");
                     // handle connection event
                 }
-                else if (e.EventType == EventType.DeviceRemoveComplete) {
+                else if (e.EventType == EventType.DeviceRemoveComplete)
+                {
                     Console.WriteLine("Device disconnected.");
                     // handle disconnection event
                 }
             }
         }
 
-        protected override void OnClosed(EventArgs e) {
+        protected override void OnClosed(EventArgs e)
+        {
             base.OnClosed(e);
             (DataContext as MainWindowViewModel)?.CloseVideoPlayback();
 
         }
-        protected override void OnKeyDown(KeyEventArgs e) {
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
             base.OnKeyDown(e);
-            if (e.Key == Key.Escape && ((DataContext as MainWindowViewModel)?.VideoIsVisible ?? false)) {
+            if (e.Key == Key.Escape && ((DataContext as MainWindowViewModel)?.VideoIsVisible ?? false))
+            {
                 count++;
-                if (count == 2) {
+                if (count == 2)
+                {
                     (DataContext as MainWindowViewModel)?.HideVideoPlayback();
                     count = 0;
                 }
@@ -58,6 +86,7 @@ namespace DeLightWPF {
                 count = 0;
         }
 
+        #region Improved Slider Behavior
 
         private void Slider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -75,7 +104,6 @@ namespace DeLightWPF {
                 UpdateSliderValue(slider, e);
             }
         }
-
         private void Slider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             isDragging = false;
@@ -89,21 +117,17 @@ namespace DeLightWPF {
             var point = e.GetPosition(slider);
             var ratio = point.X / slider.ActualWidth;
             var value = ratio * (slider.Maximum - slider.Minimum) + slider.Minimum;
-            if(value < slider.Minimum)
+            if (value < slider.Minimum)
                 value = slider.Minimum;
-            else if(value > slider.Maximum)
+            else if (value > slider.Maximum)
                 value = slider.Maximum;
             slider.Value = value;
         }
+        #endregion
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
-        }
-
-        private void TextBlock_GiveFeedback(object sender, GiveFeedbackEventArgs e)
-        {
-
         }
     }
 }

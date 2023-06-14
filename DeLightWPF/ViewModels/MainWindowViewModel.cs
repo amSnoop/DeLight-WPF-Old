@@ -9,6 +9,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using DeLightWPF.Models;
+using DeLightWPF.Utilities;
 
 namespace DeLightWPF {
     public partial class MainWindowViewModel : ObservableObject {
@@ -16,6 +18,10 @@ namespace DeLightWPF {
         private string _selectedMonitor = "";
         private VideoWindow _videoWindow;
         private VideoWindow? _newVideoWindow;
+
+        [ObservableProperty]
+        private Show show;
+
 
         [ObservableProperty]
         private double fadeTime = 5;
@@ -56,6 +62,7 @@ namespace DeLightWPF {
         }
 
         public MainWindowViewModel(MainWindow window) {
+            show = Show.Load(GlobalSettings.Instance.LastShowPath);
             _window = window;
             _videoWindow = new();
             _screenObjects = Screen.AllScreens.ToList();
