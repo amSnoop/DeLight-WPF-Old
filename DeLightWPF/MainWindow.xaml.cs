@@ -100,5 +100,10 @@ namespace DeLightWPF {
         {
             DragMove();
         }
+
+        private void TextBlock_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+
+        }
     }
 }

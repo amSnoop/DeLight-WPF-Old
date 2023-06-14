@@ -5,15 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeLightWPF"
         mc:Ignorable="d"
-        Title="DeLight WPF Version" Height="1080" Width="1920"
-        Background="White"
+        Title="DeLight WPF Version" 
+        Height="1080" 
+        Width="1920"
+        Background="#000"
         WindowStyle="None"
         BorderBrush="White"
         BorderThickness="1"
-        AllowsTransparency="False"
-        ResizeMode="NoResize"
-        MouseLeftButtonDown="Window_MouseLeftButtonDown"
-        Focusable="True">
+        ResizeMode="NoResize">
     <!--<DockPanel>
         <Button Command="{Binding OpenFileCommand}" DockPanel.Dock="Top">Open Video</Button>
         <ComboBox ItemsSource="{Binding Monitors}" SelectedItem="{Binding SelectedMonitor}" DockPanel.Dock="Top"/>
@@ -27,40 +26,309 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            
+
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <Menu Background="White">
-            <MenuItem Header="File">
-                <MenuItem Header="Open Video" Command="{Binding OpenFileCommand}"/>
-                <MenuItem Header="Open Image" Command="{Binding OpenImageCommand}"/>
-                <MenuItem Header="Open Audio" Command="{Binding OpenAudioCommand}"/>
-                <MenuItem Header="Open Playlist" Command="{Binding OpenPlaylistCommand}"/>
-                <MenuItem Header="Open Project" Command="{Binding OpenProjectCommand}"/>
-                <MenuItem Header="Save Project" Command="{Binding SaveProjectCommand}"/>
-                <MenuItem Header="Save Project As" Command="{Binding SaveProjectAsCommand}"/>
-                <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
-            </MenuItem>
-            <MenuItem Header="Edit">
-                
-            </MenuItem>
-        </Menu>
-        <Border Grid.Column="1" HorizontalAlignment="Stretch" Background="White">
+        <Border Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Background="White" MouseLeftButtonDown="Window_MouseLeftButtonDown">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Border Background="Red" Height="20" Width="20" />
-                <Border Background="Yellow" Height="20" Width="20" />
                 <Border Background="Green" Height="20" Width="20" />
+                <Border Background="Yellow" Height="20" Width="20" />
+                <Border Background="Red" Height="20" Width="20" />
             </StackPanel>
         </Border>
+        
+        
+        
         <!-- Previewer / Settings window -->
-        <StackPanel Background="Black" Grid.Row="1"/>
+        <Border Grid.Row="1" Margin="10,10,5,5" BorderBrush="#222" BorderThickness="5" Background="Black" Padding="50">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Background="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+                    <TextBlock Text="Preview" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <StackPanel Grid.Row="1" Margin="0,15,0,0">
+                    <TextBlock Text="Preview Scrubber" Foreground="White"/>
+                    <Slider></Slider>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="50,0,0,0">
+                    <TextBlock Text="Settings" Foreground="White" HorizontalAlignment="Center"/>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Fade In:" Foreground="White"/>
+                        <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="3" />
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Fade Out:" Foreground="White"/>
+                        <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="3" />
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Good:" Foreground="White"/>
+                        <CheckBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" />
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Very Bad:" Foreground="White"/>
+                        <CheckBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" IsChecked="True"/>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        
+        
+        
         <!-- Cue List Window -->
-        <StackPanel Background="Black" Grid.Column="1" Grid.Row ="1" Grid.RowSpan="2"/>
+        <Border Grid.Column="1" Grid.Row ="1" Grid.RowSpan="3" Margin="5,10,10,10" BorderBrush="#222" BorderThickness="5" CornerRadius="5" Background="#444">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border BorderBrush="#000" BorderThickness="0" Background="#000" Margin="5" Padding="5" CornerRadius="5,5,0,0">
+                    <TextBlock Margin="2" Foreground="White" HorizontalAlignment="Center"> Cue List</TextBlock>
+                </Border>
+                <Border BorderBrush="#222" BorderThickness="0" Margin="5" Background="#000" VerticalAlignment="Stretch" Grid.Row="1">
+                    <StackPanel>
+                        <Grid Background="#222">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="White" BorderThickness="0,0,1,1" Grid.Column="0">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left"> Cue #</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="0,0,0,1" Grid.Column="1">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left"> Note</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="1,0,0,01" Grid.Column="2">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left"> Type</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Background="#000">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="White" BorderThickness="0,0,1,0" Grid.Column="0">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">1</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="0,0,0,0" Grid.Column="1">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">This was a triumph</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="1,0,0,0" Grid.Column="2">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Video/Light</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Background="#111">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="White" BorderThickness="0,0,1,0" Grid.Column="0">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">2</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="0,0,0,0" Grid.Column="1">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">I'm leaving a note here:</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="1,0,0,0" Grid.Column="2">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Image/Light</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Background="#000">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="White" BorderThickness="0,0,1,0" Grid.Column="0">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">3</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="0,0,0,0" Grid.Column="1">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Huge success!</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="1,0,0,0" Grid.Column="2">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Video/Light</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Background="#777">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="White" BorderThickness="0,0,1,0" Grid.Column="0">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">4</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="0,0,0,0" Grid.Column="1">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">It's hard to overstate my satisfaction.</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="1,0,0,0" Grid.Column="2">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Light</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Background="#000">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="White" BorderThickness="0,0,1,0" Grid.Column="0">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">5</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="0,0,0,0" Grid.Column="1">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Aperature Science</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="1,0,0,0" Grid.Column="2">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Light</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Background="#111">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="White" BorderThickness="0,0,1,0" Grid.Column="0">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">6</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="0,0,0,0" Grid.Column="1">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">We do what we must, because, we can.</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="1,0,0,0" Grid.Column="2">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Image</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Background="#45a4d3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="White" BorderThickness="1" Grid.Column="0">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">7</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="0,1" Grid.Column="1">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">For the good of all of us,</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="1" Grid.Column="2">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Video</TextBlock>
+                            </Border>
+                        </Grid>
+                        <Grid Background="#111">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="White" BorderThickness="0,0,1,0" Grid.Column="0">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">8</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="0,0,0,0" Grid.Column="1">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Except the ones who are dead.</TextBlock>
+                            </Border>
+                            <Border BorderBrush="White" BorderThickness="1,0,0,0" Grid.Column="2">
+                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left">Video/Light</TextBlock>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Overall Controls -->
+        <Border Grid.Row="2" Margin="10,5,5,10" BorderBrush="#222" BorderThickness="5">
+            <Grid  Background="Black">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Master Controls" Grid.Column="0" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center" Grid.ColumnSpan="6"/>
+                <!-- Play/Pause/Stop/Seek Slider/Time Passed/TotalTime -->
+                <Slider Grid.Column="0" Margin="5,5,5,5" Grid.Row="1"/>
+                <TextBlock Grid.Column="1" Margin="5,5,5,5" Text="00:00:00" Foreground="Wheat" Grid.Row="1"/>
+                <TextBlock Grid.Column="2" Margin="5,5,5,5" Text=" / 00:00:00" Foreground="White" Grid.Row="1"/>
+                <Button Grid.Column="3" Content="Play" Margin="5,5,5,5" Grid.Row="1"/>
+                <Button Grid.Column="4" Content="Pause" Margin="5,5,5,5" Grid.Row="1"/>
+                <Button Grid.Column="5" Content="Stop" Margin="5,5,5,5" Grid.Row="1"/>
+            </Grid>
+        </Border>
+
         <!-- Timeline Window -->
-        <StackPanel Background="Black" Grid.Row="2"/>
+        <Border Grid.Row="3" Margin="10,5,5,10" BorderBrush="#222" BorderThickness="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Grid.Column="1" Grid.Row="0" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
+                    <TextBlock Text="Timeline Numbers Yada Yada Yada |0 |1 |2 |3" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="0" Grid.Row="1" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
+                    <TextBlock Text="Video/Image Track" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="0" Grid.Row="2" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
+                    <TextBlock Text="Lighting Track" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="1" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
+                    <TextBlock Text="Timeline Numbers Yada Yada Yada |0 |1 |2 |3" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="2" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
+                    <TextBlock Text="Timeline Numbers Yada Yada Yada |0 |1 |2 |3" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
