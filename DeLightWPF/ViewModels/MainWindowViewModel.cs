@@ -7,10 +7,10 @@ using System.Windows;
 using System.Windows.Forms;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using DeLightWPF.Models;
 using DeLightWPF.Utilities;
+using DeLightWPF.ViewModels;
 
 namespace DeLightWPF {
     public partial class MainWindowViewModel : ObservableObject {
@@ -20,41 +20,29 @@ namespace DeLightWPF {
         private VideoWindow? _newVideoWindow;
 
         [ObservableProperty]
-        private Show show;
+        private CueViewModel cueViewModel = new();
+
+        private Cue? selectedCue;
+
+        public Cue? SelectedCue {
+            get => selectedCue;
+            set
+            {
+                if (SetProperty(ref selectedCue, value)) {
+                    // Notify the detail view model to update
+                    CueViewModel.CurrentCue = value;
+                }
+            }
+        }
 
 
         [ObservableProperty]
-        private double fadeTime = 5;
-
-        private double _volume = .2;
-
-        
-        private double _opacity = 1;
-
-        public double Opacity
-        {
-            get => _opacity;
-            set
-            {
-                SetProperty(ref _opacity, value);
-                _videoWindow.VideoViewControl.Opacity = value;
-            }
-        }
-
-        public double Volume
-        {
-            get => _volume;
-            set
-            {
-                SetProperty(ref _volume, value);
-                _videoWindow.VideoViewControl.Volume = value;
-            }
-        }
+        private Show show;
 
         public bool VideoIsVisible => _videoWindow.IsVisible;
 
         public List<string> Monitors { get; }
-        private List<Screen> _screenObjects;
+        private readonly List<Screen> _screenObjects;
 
         public string SelectedMonitor {
             get => _selectedMonitor;
@@ -102,7 +90,7 @@ namespace DeLightWPF {
                 _newVideoWindow.WindowStartupLocation = WindowStartupLocation.Manual;
                 _newVideoWindow.Top = selectedScreen.Bounds.Top;
                 _newVideoWindow.Left = selectedScreen.Bounds.Left;
-                _newVideoWindow.VideoViewControl.Volume = Volume;
+                _newVideoWindow.VideoViewControl.Volume = SelectedCue?.Volume ?? 0;
                 _newVideoWindow.WindowStyle = WindowStyle.None;
                 _newVideoWindow.Show();
                 _window.Focus();
@@ -125,7 +113,7 @@ namespace DeLightWPF {
 
         private Task FadeInOut()
         {
-            var duration = TimeSpan.FromSeconds(FadeTime);
+            var duration = TimeSpan.FromSeconds(SelectedCue?.FadeInTime ?? 0);
             var fadeIn = new DoubleAnimation(0, 1, duration);
             //var fadeOutAudio = new DoubleAnimation(_window.VolumeSlider.Value, 0.0, duration);
 

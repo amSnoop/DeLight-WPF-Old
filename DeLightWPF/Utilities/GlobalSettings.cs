@@ -23,12 +23,13 @@ namespace DeLightWPF.Utilities
             // Find settings json and load it, or create a new one if it doesn't exist
             if (File.Exists("settings.json"))
             {
-                using StreamReader r = new StreamReader("settings.json");
+                using StreamReader r = new ("settings.json");
                 string json = r.ReadToEnd();
                 Instance = JsonSerializer.Deserialize<GlobalSettings>(json) ?? new GlobalSettings();
             }
             else
             {
+                Console.WriteLine("settings.json file not found. Creating new settings file.");
                 Instance = new GlobalSettings();
                 Save();
             }

@@ -1,15 +1,19 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
 namespace DeLightWPF.Models
 {
-    public class Show
+    public partial class Show : ObservableObject
     {
-        string Name { get; set; }
-        string Path { get; set; }
-        List<Cue> Cues { get; set; }
+        [ObservableProperty]
+        private string name;
+        [ObservableProperty]
+        private string path;
+        [ObservableProperty]
+        private List<Cue> cues;
 
         public Cue? this[int i]
         {
