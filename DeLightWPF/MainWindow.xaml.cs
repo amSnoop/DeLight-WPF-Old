@@ -95,5 +95,10 @@ namespace DeLightWPF {
                 value = slider.Maximum;
             slider.Value = value;
         }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
     }
 }

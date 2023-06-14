@@ -10,7 +10,7 @@ namespace DeLightWPF
     {
         public static UsbDeviceFinder MyUsbFinder { get; private set; } = new UsbDeviceFinder(1234, 5678); // replace with your VID and PID
 
-        public static void Main(string[] args)
+        public static void Main2(string[] args)
         {
             // Find and open the USB device.
             UsbDevice usbDevice = UsbDevice.OpenUsbDevice(MyUsbFinder);

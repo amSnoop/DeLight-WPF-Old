@@ -120,7 +120,7 @@ namespace DeLightWPF {
         {
             var duration = TimeSpan.FromSeconds(FadeTime);
             var fadeIn = new DoubleAnimation(0, 1, duration);
-            var fadeOutAudio = new DoubleAnimation(_window.VolumeSlider.Value, 0.0, duration);
+            //var fadeOutAudio = new DoubleAnimation(_window.VolumeSlider.Value, 0.0, duration);
 
             var tcs = new TaskCompletionSource<bool>();
 
@@ -130,7 +130,7 @@ namespace DeLightWPF {
             };
 
             _newVideoWindow?.BeginAnimation(UIElement.OpacityProperty, fadeIn);
-            _videoWindow?.VideoViewControl.BeginAnimation(MediaElement.VolumeProperty, fadeOutAudio);
+            //_videoWindow?.VideoViewControl.BeginAnimation(MediaElement.VolumeProperty, fadeOutAudio);
 
             return tcs.Task;
         }

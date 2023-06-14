@@ -5,13 +5,62 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeLightWPF"
         mc:Ignorable="d"
-        Title="DeLight WPF Version" Height="450" Width="800">
-    <DockPanel>
+        Title="DeLight WPF Version" Height="1080" Width="1920"
+        Background="White"
+        WindowStyle="None"
+        BorderBrush="White"
+        BorderThickness="1"
+        AllowsTransparency="False"
+        ResizeMode="NoResize"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Focusable="True">
+    <!--<DockPanel>
         <Button Command="{Binding OpenFileCommand}" DockPanel.Dock="Top">Open Video</Button>
         <ComboBox ItemsSource="{Binding Monitors}" SelectedItem="{Binding SelectedMonitor}" DockPanel.Dock="Top"/>
         <Slider Value="{Binding Volume}" x:Name="VolumeSlider" DockPanel.Dock="Top" Minimum="0" Maximum="1" TickFrequency=".01" PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown" PreviewMouseMove="Slider_PreviewMouseMove" PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp" Background="Black"/>
         <TextBlock Text="{Binding Volume}" DockPanel.Dock="Top"/>
         <Slider Value="{Binding Opacity}" DockPanel.Dock="Top" Minimum="0" Maximum="1" TickFrequency=".01" PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown" PreviewMouseMove="Slider_PreviewMouseMove" PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp" Background="Black"/>
         <TextBlock Text="{Binding Opacity}" DockPanel.Dock="Top"/>
-    </DockPanel>
+    </DockPanel>-->
+
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <Menu Background="White">
+            <MenuItem Header="File">
+                <MenuItem Header="Open Video" Command="{Binding OpenFileCommand}"/>
+                <MenuItem Header="Open Image" Command="{Binding OpenImageCommand}"/>
+                <MenuItem Header="Open Audio" Command="{Binding OpenAudioCommand}"/>
+                <MenuItem Header="Open Playlist" Command="{Binding OpenPlaylistCommand}"/>
+                <MenuItem Header="Open Project" Command="{Binding OpenProjectCommand}"/>
+                <MenuItem Header="Save Project" Command="{Binding SaveProjectCommand}"/>
+                <MenuItem Header="Save Project As" Command="{Binding SaveProjectAsCommand}"/>
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                
+            </MenuItem>
+        </Menu>
+        <Border Grid.Column="1" HorizontalAlignment="Stretch" Background="White">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Border Background="Red" Height="20" Width="20" />
+                <Border Background="Yellow" Height="20" Width="20" />
+                <Border Background="Green" Height="20" Width="20" />
+            </StackPanel>
+        </Border>
+        <!-- Previewer / Settings window -->
+        <StackPanel Background="Black" Grid.Row="1"/>
+        <!-- Cue List Window -->
+        <StackPanel Background="Black" Grid.Column="1" Grid.Row ="1" Grid.RowSpan="2"/>
+        <!-- Timeline Window -->
+        <StackPanel Background="Black" Grid.Row="2"/>
+    </Grid>
 </Window>
