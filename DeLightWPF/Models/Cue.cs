@@ -15,15 +15,15 @@ namespace DeLightWPF.Models
     public partial class Cue : ObservableObject
     {
         [ObservableProperty]
-        private string number;
+        private string number = "";
         [ObservableProperty]
-        private string note;
+        private string note = "";
         [ObservableProperty]
         private CueType type;
         [ObservableProperty]
-        private string vidPath;
+        private string vidPath = "";
         [ObservableProperty]
-        private string lightPath;
+        private string lightPath = "";
 
         [ObservableProperty]
         private double fadeInTime;

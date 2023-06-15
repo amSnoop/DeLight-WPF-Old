@@ -101,50 +101,80 @@
                 </Border>
                 <Border BorderBrush="#222" BorderThickness="0" Margin="5" Background="#000" VerticalAlignment="Stretch" Grid.Row="1">
                     <StackPanel>
-                        <Grid Background="#222">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="10*" />
-                                <ColumnDefinition Width="2*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Border BorderBrush="White" BorderThickness="0,0,1,1" Grid.Column="0">
-                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left"> Cue #</TextBlock>
-                            </Border>
-                            <Border BorderBrush="White" BorderThickness="0,0,0,1" Grid.Column="1">
-                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left"> Note</TextBlock>
-                            </Border>
-                            <Border BorderBrush="White" BorderThickness="1,0,0,01" Grid.Column="2">
-                                <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left"> Type</TextBlock>
-                            </Border>
-                        </Grid>
-                        <ListBox AlternationCount="2" Grid.Row="1" Background="#000" BorderBrush="#222" ItemsSource="{Binding Show.Cues}" HorizontalAlignment="Stretch">
+                        <Border>
+                            <Grid Margin="4,1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="10*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" BorderBrush="White" BorderThickness="0,0,1,1" Margin="-1" Padding="1">
+                                    <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="Cue #" FontSize="14" />
+                                </Border>
+                                <Border Grid.Column="1" BorderBrush="White" BorderThickness="1,0,0,1" Padding="1" Margin="-1">
+                                    <TextBlock Grid.Column="1" Margin="6,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="Note" FontSize="14" />
+                                </Border>
+                                <Border Grid.Column="2" BorderBrush="White" BorderThickness="1,0,0,1" Padding="1" Margin="-1">
+                                    <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="Type" FontSize="14" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                        <ListBox AlternationCount="2" Grid.Row="1" Background="#000" BorderBrush="#222" ItemsSource="{Binding Show.Cues}" HorizontalAlignment="Stretch" Margin="0" Padding="0">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderThickness="1">
+                                                    <ContentPresenter />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="White" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="False">
+                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="Transparent" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#888" />
+                                                    </Trigger>
+                                                             
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+
+                                    <Style.Triggers>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                            <Setter Property="Background" Value="#000" />
+                                        </Trigger>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                            <Setter Property="Background" Value="#222" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#45a4d3" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid x:Name="CueListBox" HorizontalAlignment="Stretch">
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="10*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <Border Grid.Column="0" BorderBrush="White" BorderThickness="0,0,1,0">
+                                        <Border Grid.Column="0" BorderBrush="White" BorderThickness="0,0,1,0" Margin="-1" Padding="1">
                                             <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="{Binding Number}" FontSize="14" />
                                         </Border>
-                                        <TextBlock Grid.Column="1" Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="{Binding Note}" FontSize="14" />
-                                        <Border Grid.Column="2" BorderBrush="White" BorderThickness="1,0,0,0">
+                                        <TextBlock Grid.Column="1" Margin="6,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="{Binding Note}" FontSize="14" />
+                                        <Border Grid.Column="2" BorderBrush="White" BorderThickness="1,0,0,0" Padding="1" Margin="-1">
                                             <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="{Binding Type}" FontSize="14" />
                                         </Border>
                                     </Grid>
-                                    <DataTemplate.Triggers>
-                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                                            <Setter Property="Background" Value="#000" TargetName="CueListBox"/>
-                                        </Trigger>
-                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                                            <Setter Property="Background" Value="#222" TargetName="CueListBox"/>
-                                        </Trigger>
-                                    </DataTemplate.Triggers>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -202,10 +232,10 @@
                     <TextBlock Text="Lighting Track" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
                 </Border>
                 <Border Grid.Column="1" Grid.Row="1" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
-                    <TextBlock Text="Timeline Numbers Yada Yada Yada |0 |1 |2 |3" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Video Track info like Name and Duration and whatever" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
                 </Border>
                 <Border Grid.Column="1" Grid.Row="2" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
-                    <TextBlock Text="Timeline Numbers Yada Yada Yada |0 |1 |2 |3" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Light Track info like name and duration, as well as indicators for each step in the scene." Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
                 </Border>
             </Grid>
         </Border>
