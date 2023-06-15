@@ -18,11 +18,37 @@ namespace DeLightWPF {
         private string _selectedMonitor = "";
         private VideoWindow _videoWindow;
         private VideoWindow? _newVideoWindow;
+        private readonly List<Screen> _screenObjects;
+
 
         [ObservableProperty]
-        private CueViewModel cueViewModel = new();
+        private CueViewModel previewCueViewModel = new();
+
+        [ObservableProperty]
+        private CueViewModel activeCueViewModel = new();
+
+        [ObservableProperty]
+        private Show show;
+
+
+        #region Non [ObservableProperty] Properties that send updates to the view
 
         private Cue? selectedCue;
+
+        private Cue? activeCue;
+
+        public Cue? ActiveCue
+        {
+            get => activeCue;
+            set
+            {
+                if (SetProperty(ref activeCue, value))
+                {
+                    // Notify the detail view model to update
+                    ActiveCueViewModel.CurrentCue = value;
+                }
+            }
+        }
 
         public Cue? SelectedCue {
             get => selectedCue;
@@ -30,24 +56,22 @@ namespace DeLightWPF {
             {
                 if (SetProperty(ref selectedCue, value)) {
                     // Notify the detail view model to update
-                    CueViewModel.CurrentCue = value;
+                    PreviewCueViewModel.CurrentCue = value;
                 }
             }
         }
 
-
-        [ObservableProperty]
-        private Show show;
+        #endregion
+        
 
         public bool VideoIsVisible => _videoWindow.IsVisible;
-
         public List<string> Monitors { get; }
-        private readonly List<Screen> _screenObjects;
-
         public string SelectedMonitor {
             get => _selectedMonitor;
             set => SetProperty(ref _selectedMonitor, value);
         }
+
+
 
         public MainWindowViewModel(MainWindow window) {
             show = Show.Load(GlobalSettings.Instance.LastShowPath);

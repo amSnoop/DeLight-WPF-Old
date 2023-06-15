@@ -11,6 +11,10 @@ namespace DeLightWPF.ViewModels
         [ObservableProperty]
         private Cue? currentCue;
 
+        public string Title => CurrentCue == null ? "No Cue Selected" : "Settings for Cue #" + CurrentCue.Number;
+
+        public string Note => CurrentCue?.Note ?? "";
+
         #region Verified Properties
         public double FadeInTime {
             get => CurrentCue?.FadeInTime ?? GlobalSettings.Instance.DefaultFadeTime;
@@ -52,6 +56,21 @@ namespace DeLightWPF.ViewModels
             }
         }
 
+        public double Duration
+        {
+            get => CurrentCue?.Duration ?? GlobalSettings.Instance.DefaultDuration;
+            set
+            {
+                if (value < 0)
+                    value = 0;
+                if (CurrentCue != null)
+                {
+                    CurrentCue.Duration = value;
+                    OnPropertyChanged(nameof(Duration));
+                }
+            }
+        }
+
         #endregion
         public void Play()
         {
@@ -69,6 +88,15 @@ namespace DeLightWPF.ViewModels
         {
             if(CurrentCue != null)
                 _cuePlayer.Scrub(CurrentCue, newPosition);
+        }
+
+        partial void OnCurrentCueChanged(Cue? value)
+        {
+            OnPropertyChanged(nameof(FadeInTime));
+            OnPropertyChanged(nameof(FadeOutTime));
+            OnPropertyChanged(nameof(Volume));
+            OnPropertyChanged(nameof(Title));
+            OnPropertyChanged(nameof(Note));
         }
     }
 }
