@@ -9,9 +9,14 @@
         Height="450" 
         Width="800" 
         Cursor="None" 
-        Background="Transparent" 
-        AllowsTransparency="True">
-    <Border Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <MediaElement x:Name="VideoViewControl" LoadedBehavior="Manual" UnloadedBehavior="Manual" Stretch="UniformToFill" Focusable="False" />
-    </Border>
+        Background="Black" 
+        WindowStyle="None"
+        AllowsTransparency="True"
+        WindowState="Maximized"
+        ShowInTaskbar="False"
+        Topmost="True"
+        WindowStartupLocation="Manual"
+        ResizeMode="NoResize">
+    <Grid x:Name="Container" Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+    </Grid>
 </Window>

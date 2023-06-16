@@ -1,25 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Forms;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Windows.Media.Animation;
 using DeLightWPF.Models;
 using DeLightWPF.Utilities;
 using DeLightWPF.ViewModels;
-using System.Security.Cryptography;
 
 namespace DeLightWPF {
     public partial class MainWindowViewModel : ObservableObject {
         private readonly MainWindow _window;
         private string _selectedMonitor = "";
-        public CuePlayer CuePlayer { get; set; } = new();
+        private VideoWindow VideoWindow { get; set; } = new();
         private readonly List<Screen> _screenObjects;
-
 
         [ObservableProperty]
         private CueViewModel previewCueViewModel = new();
@@ -46,6 +38,7 @@ namespace DeLightWPF {
                 {
                     // Notify the detail view model to update
                     ActiveCueViewModel.CurrentCue = value;
+                    VideoWindow.Load(value);
                 }
             }
         }
@@ -64,7 +57,7 @@ namespace DeLightWPF {
         #endregion
         
 
-        public bool VideoIsVisible => CuePlayer.VideoWindow != null;
+        public bool VideoIsVisible => VideoWindow.IsVisible;
         public List<string> Monitors { get; }
         public string SelectedMonitor {
             get => _selectedMonitor;
@@ -83,19 +76,18 @@ namespace DeLightWPF {
         }
         public void HideVideoPlayback()
         {
-            CuePlayer.HardStop();
+            VideoWindow.Stop();
+            VideoWindow.Hide();
         }
-        public async void Play() {
-            await CuePlayer.Play(ActiveCue);
+        public void Play() {
+            VideoWindow?.Play();
+            VideoWindow?.Show();
             _window.Activate();
         }
         public async void Stop() {
-            await CuePlayer.Stop(ActiveCue);
+            VideoWindow.Stop();
             _window.Activate();
 
-        }
-        public void OnActiveCueViewModelChanged() {
-            CuePlayer.Load(ActiveCue);
         }
     }
 }
