@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Windows.Forms;
 
 namespace DeLightWPF.Utilities
 {
@@ -13,6 +14,8 @@ namespace DeLightWPF.Utilities
 
         public double DefaultDuration { get; set; } = 5;
         public string LastShowPath { get; set; } = "";
+
+        public Screen? Screen { get; set; } = Screen.PrimaryScreen;
 
         public GlobalSettings()
         {

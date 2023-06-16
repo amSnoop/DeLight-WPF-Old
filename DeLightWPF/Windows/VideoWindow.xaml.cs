@@ -1,17 +1,33 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Input;
+using System.Windows.Forms;
 
 namespace DeLightWPF {
     public partial class VideoWindow : Window {
-        public Uri? MediaUri { get; set; }
+        public string? MediaUriString { get; set; }
 
-        public VideoWindow(Uri mediaUri)
+        public VideoWindow(string? mediaUri, Screen? screen)
         {
             InitializeComponent();
-            MediaUri = mediaUri;
+            VideoViewControl.MediaOpened += OnMediaOpened;
+            MediaUriString = mediaUri;
+            if(mediaUri != null && mediaUri != "")
+                VideoViewControl.Source = new(mediaUri);
+            WindowStartupLocation = WindowStartupLocation.Manual;
+            Top = screen?.Bounds.Top ?? Screen.PrimaryScreen?.Bounds.Top ?? 0;
+            Left = screen?.Bounds.Left ?? Screen.PrimaryScreen?.Bounds.Top ?? 0;
+            WindowStyle = WindowStyle.None;
+            WindowState = WindowState.Maximized;
+            ShowInTaskbar = false;
+            Topmost = true;
+            ResizeMode = ResizeMode.NoResize;
+            Opacity = 0;
+            VideoViewControl.Opacity = 0;
         }
 
+        private void OnMediaOpened(object? sender, RoutedEventArgs e) {
+            VideoViewControl.Pause();
+        }
         public VideoWindow() {
             InitializeComponent();
         }
@@ -29,16 +45,10 @@ namespace DeLightWPF {
         }
 
         public void Play() {
-            VideoViewControl.Source = MediaUri;
             VideoViewControl.Play();
         }
 
-        protected override void OnContentRendered(EventArgs e) {
-            base.OnContentRendered(e);
-            Play();
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e) {
+        protected override void OnKeyDown(System.Windows.Input.KeyEventArgs e) {
             e.Handled = true;
         }
     }

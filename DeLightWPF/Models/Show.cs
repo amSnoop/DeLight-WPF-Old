@@ -66,7 +66,8 @@ namespace DeLightWPF.Models
             {
                 Number = "1",
                 Note = "This was a triumph",
-                Type = CueType.VidLight
+                Type = CueType.VidLight,
+                VidPath = "C:\\Users\\abrandt\\OneDrive - Environmental Quality Resource\\Desktop\\Finished Video Tracks\\1. Grease Title Song.mp4"
             });
             show.Cues.Add(new Cue()
             {

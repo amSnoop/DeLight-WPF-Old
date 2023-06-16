@@ -28,6 +28,7 @@ namespace DeLightWPF
 
             usbDeviceNotifier = DeviceNotifier.OpenDeviceNotifier();
             usbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent;
+            KeyDown += OnKeyDown;
         }
 
 
@@ -67,10 +68,10 @@ namespace DeLightWPF
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            (DataContext as MainWindowViewModel)?.CloseVideoPlayback();
+            (DataContext as MainWindowViewModel)?.HideVideoPlayback();
 
         }
-        protected override void OnKeyDown(KeyEventArgs e)
+        protected void OnKeyDown(object? sender, KeyEventArgs e)
         {
             base.OnKeyDown(e);
             if (e.Key == Key.Escape && ((DataContext as MainWindowViewModel)?.VideoIsVisible ?? false))
@@ -128,6 +129,15 @@ namespace DeLightWPF
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
+        }
+
+        private void Play_Button_Clicked(object sender, RoutedEventArgs e) {
+            if (DataContext is MainWindowViewModel viewModel)
+                viewModel.Play();
+        }
+        private void Stop_Button_Clicked(object sender, RoutedEventArgs e) {
+            if (DataContext is MainWindowViewModel viewModel)
+                viewModel.Stop();
         }
     }
 }

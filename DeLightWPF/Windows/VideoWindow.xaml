@@ -5,6 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeLightWPF"
         mc:Ignorable="d"
-        Title="VideoWindow" Height="450" Width="800" Cursor="None" Background="Transparent" AllowsTransparency="True">
-    <MediaElement x:Name="VideoViewControl" LoadedBehavior="Manual" UnloadedBehavior="Manual" Stretch="UniformToFill" Focusable="False" />
+        Title="VideoWindow" 
+        Height="450" 
+        Width="800" 
+        Cursor="None" 
+        Background="Transparent" 
+        AllowsTransparency="True">
+    <Border Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <MediaElement x:Name="VideoViewControl" LoadedBehavior="Manual" UnloadedBehavior="Manual" Stretch="UniformToFill" Focusable="False" />
+    </Border>
 </Window>

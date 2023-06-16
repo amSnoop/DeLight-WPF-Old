@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:DeLightWPF" d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="DeLight WPF Version" 
-        Height="1080" 
-        Width="1920"
+        Height="720" 
+        Width="1080"
         Background="#2b6886"
         WindowStyle="None"
         BorderBrush="White"
@@ -237,9 +237,9 @@
                 <Slider Grid.Column="0" Margin="5,5,5,5" Grid.Row="1"/>
                 <TextBlock Grid.Column="1" Margin="5,5,5,5" Text="00:00:00" Foreground="Wheat" Grid.Row="1"/>
                 <TextBlock Grid.Column="2" Margin="5,5,5,5" Text=" / 00:00:00" Foreground="White" Grid.Row="1"/>
-                <Button Grid.Column="3" Content="Play" Margin="5,5,5,5" Grid.Row="1"/>
+                <Button Grid.Column="3" Content="Play" Margin="5,5,5,5" Grid.Row="1" Click="Play_Button_Clicked"/>
                 <Button Grid.Column="4" Content="Pause" Margin="5,5,5,5" Grid.Row="1"/>
-                <Button Grid.Column="5" Content="Stop" Margin="5,5,5,5" Grid.Row="1"/>
+                <Button Grid.Column="5" Content="Stop" Margin="5,5,5,5" Grid.Row="1" Click="Stop_Button_Clicked"/>
             </Grid>
         </Border>
 
