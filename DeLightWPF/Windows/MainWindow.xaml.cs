@@ -29,6 +29,7 @@ namespace DeLightWPF
             usbDeviceNotifier = DeviceNotifier.OpenDeviceNotifier();
             usbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent;
             KeyDown += OnKeyDown;
+            SizeChanged += MainWindow_OnSizeChanged;
         }
 
 
@@ -138,6 +139,12 @@ namespace DeLightWPF
         private void Stop_Button_Clicked(object sender, RoutedEventArgs e) {
             if (DataContext is MainWindowViewModel viewModel)
                 viewModel.Stop();
+        }
+
+        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e) {
+            if (DataContext is MainWindowViewModel vm) {
+                vm.UpdateFonts();
+            }
         }
     }
 }

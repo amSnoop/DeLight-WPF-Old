@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -22,6 +23,61 @@ namespace DeLightWPF {
         [ObservableProperty]
         private Show show;
 
+        [ObservableProperty]
+        private int factor = 35;
+        [ObservableProperty]
+        private int factor1 = 40;
+        [ObservableProperty]
+        private int factor2 = 30;
+        [ObservableProperty]
+        private int factor3 = 40;
+        partial void OnFactorChanged(int value) {
+            UpdateFonts();
+        }
+        partial void OnFactor1Changed(int value) {
+            UpdateFonts();
+        }
+        partial void OnFactor2Changed(int value) {
+            UpdateFonts();
+        }
+        partial void OnFactor3Changed(int value) {
+            UpdateFonts();
+        }
+        public void UpdateFonts() {
+            OnPropertyChanged(nameof(TitleFontSize));
+            OnPropertyChanged(nameof(SubtitleFontSize));
+            OnPropertyChanged(nameof(BodyFontSize));
+            OnPropertyChanged(nameof(CueFontSize));
+        }
+        public double TitleFontSize {
+            get
+            {
+                double baseFontSize = 30;
+                double scaleFactor = 1 + Math.Log(_window.Width / 1000.0);
+                double maxFontSize = 50;
+                double fontSize = Math.Max(Math.Min(baseFontSize * scaleFactor, maxFontSize), baseFontSize);
+
+                return fontSize;
+            }
+        }
+
+        public int RowHeight {
+            get
+            {
+                double windowHeight = _window.Height;
+                double rowHeight = windowHeight / 30;
+                return (int)rowHeight;
+            }
+        }
+
+        public void UpdatePadding() {
+            OnPropertyChanged(nameof(Padding));
+        }
+
+        public double CueFontSize => TitleFontSize * Factor3 / 100;
+        public double SubtitleFontSize => TitleFontSize * Factor1 / 100;
+
+        public double BodyFontSize => TitleFontSize * Factor2 / 100;
 
         #region Non [ObservableProperty] Properties that send updates to the view
 
@@ -29,13 +85,11 @@ namespace DeLightWPF {
 
         private Cue? activeCue;
 
-        public Cue? ActiveCue
-        {
+        public Cue? ActiveCue {
             get => activeCue;
             set
             {
-                if (SetProperty(ref activeCue, value))
-                {
+                if (SetProperty(ref activeCue, value)) {
                     // Notify the detail view model to update
                     ActiveCueViewModel.CurrentCue = value;
                     VideoWindow.Load(value);
@@ -55,7 +109,7 @@ namespace DeLightWPF {
         }
 
         #endregion
-        
+
 
         public bool VideoIsVisible => VideoWindow.IsVisible;
         public List<string> Monitors { get; }
@@ -74,8 +128,7 @@ namespace DeLightWPF {
             SelectedMonitor = Monitors.FirstOrDefault() ?? "";
 
         }
-        public void HideVideoPlayback()
-        {
+        public void HideVideoPlayback() {
             VideoWindow.Stop();
             VideoWindow.Hide();
         }
@@ -84,7 +137,7 @@ namespace DeLightWPF {
             VideoWindow?.Show();
             _window.Activate();
         }
-        public async void Stop() {
+        public void Stop() {
             VideoWindow.Stop();
             _window.Activate();
 
