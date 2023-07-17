@@ -8,66 +8,49 @@
         Title="DeLight WPF Version" 
         Height="720" 
         Width="1080"
-        Background="#2b6886"
-        WindowStyle="None"
+        Background="#000"
+        WindowStyle="SingleBorderWindow"
         BorderBrush="White"
         BorderThickness="1"
-        ResizeMode="NoResize">
-    <!--<DockPanel>
-        <Button Command="{Binding OpenFileCommand}" DockPanel.Dock="Top">Open Video</Button>
-        <ComboBox ItemsSource="{Binding Monitors}" SelectedItem="{Binding SelectedMonitor}" DockPanel.Dock="Top"/>
-        <Slider Value="{Binding Volume}" x:Name="VolumeSlider" DockPanel.Dock="Top" Minimum="0" Maximum="1" TickFrequency=".01" PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown" PreviewMouseMove="Slider_PreviewMouseMove" PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp" Background="Black"/>
-        <TextBlock Text="{Binding Volume}" DockPanel.Dock="Top"/>
-        <Slider Value="{Binding Opacity}" DockPanel.Dock="Top" Minimum="0" Maximum="1" TickFrequency=".01" PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown" PreviewMouseMove="Slider_PreviewMouseMove" PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp" Background="Black"/>
-        <TextBlock Text="{Binding Opacity}" DockPanel.Dock="Top"/>
-    </DockPanel>
-    #45a4d3
-    -->
+        ResizeMode="CanResizeWithGrip">
 
     <Grid Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" /> <!-- Top Bar -->
-            <RowDefinition Height="*" /> <!-- Previewer window -->
-            <RowDefinition Height="Auto" /> <!-- Controls Window -->
-            <RowDefinition Height="*" /> <!-- Settings Window -->
+            <RowDefinition Height="*" />
+            <!-- Previewer window -->
+            <RowDefinition Height="Auto" />
+            <!-- Controls Window -->
 
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*" /> <!-- Previewer / Controls / Settings window -->
-            <ColumnDefinition Width="2*" /> <!-- Cue List Window -->
+            <ColumnDefinition Width="*" />
+            <!-- Previewer / Controls / Settings window -->
+            <ColumnDefinition Width="3*" />
+            <!-- Cue List Window -->
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <Border Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Background="White" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Border Background="Green" Height="20" Width="20" />
-                <Border Background="Yellow" Height="20" Width="20" />
-                <Border Background="Red" Height="20" Width="20" />
-            </StackPanel>
-        </Border>
 
 
 
         <!-- Previewer / Settings window -->
-        <Border Grid.Row="1" Margin="10,10,5,5" BorderBrush="#222" BorderThickness="5" Background="Black" Padding="50,0">
+        <Border Grid.Row="0" Grid.Column="1" Margin="0,20,0,0" Background="Black" Padding="50,0">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="2*" />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock HorizontalAlignment="Center" Grid.ColumnSpan="2" Text="Previewer" Foreground="White" FontSize="30" Margin="20"/>
-                <Border Background="White" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+                <TextBlock HorizontalAlignment="Center" Grid.ColumnSpan="2" Text="Previewer" Foreground="White" FontSize="40" />
+                <Border Background="#45a4d3" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="100">
                     <TextBlock Text="Preview" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>
-                <StackPanel Grid.Row="2" Margin="0,15,0,50">
-                    <TextBlock Text="Preview Scrubber" Foreground="White"/>
+                <StackPanel Grid.Row="2" Margin="100,-55,100,100">
+                    <TextBlock Text="Preview Scrubber" Foreground="White" Margin="0,10"/>
                     <Slider></Slider>
                 </StackPanel>
-                <Border Grid.Column="1" Grid.RowSpan="2" Grid.Row="1" DataContext="{Binding PreviewCueViewModel}">
-                    <StackPanel Margin="50,0,0,0">
+                <Border Grid.Row="3" DataContext="{Binding PreviewCueViewModel}">
+                    <StackPanel Margin="0,0,0,50">
                         <TextBlock Text="{Binding Title}" Foreground="White" HorizontalAlignment="Center"/>
                         <TextBlock Text="{Binding Note}" Foreground="White" HorizontalAlignment="Center"/>
                         <Grid Margin="50,10">
@@ -119,40 +102,17 @@
             </Grid>
         </Border>
 
-
-
-
         <!-- Cue List Window -->
-        <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Margin="5,10,10,10" BorderBrush="#222" BorderThickness="5" CornerRadius="5" Background="#444">
+        <Border Grid.Column="2" Grid.Row="0" Margin="0,20,20,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Border BorderBrush="#000" BorderThickness="0" Background="#000" Margin="5" Padding="5" CornerRadius="5,5,0,0">
-                    <TextBlock Margin="2" Foreground="White" HorizontalAlignment="Center"> Cue List</TextBlock>
-                </Border>
-                <Border BorderBrush="#222" BorderThickness="0" Margin="5" Background="#000" VerticalAlignment="Stretch" Grid.Row="1">
+                <TextBlock Foreground="White" FontSize="40" HorizontalAlignment="Center"> Cue List</TextBlock>
+                <Border VerticalAlignment="Stretch" Grid.Row="1">
                     <StackPanel>
-                        <Border>
-                            <Grid Margin="4,1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="2*" />
-                                </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" BorderBrush="White" BorderThickness="0,0,1,1" Margin="-1" Padding="1">
-                                    <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="Cue #" FontSize="14" />
-                                </Border>
-                                <Border Grid.Column="1" BorderBrush="White" BorderThickness="1,0,0,1" Padding="1" Margin="-1">
-                                    <TextBlock Grid.Column="1" Margin="6,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="Note" FontSize="14" />
-                                </Border>
-                                <Border Grid.Column="2" BorderBrush="White" BorderThickness="1,0,0,1" Padding="1" Margin="-1">
-                                    <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="Type" FontSize="14" />
-                                </Border>
-                            </Grid>
-                        </Border>
-                        <ListBox AlternationCount="2" Grid.Row="1" Background="#000" BorderBrush="#222" ItemsSource="{Binding Show.Cues}" HorizontalAlignment="Stretch" Margin="0" Padding="0" SelectedItem="{Binding ActiveCue}">
+                        <ListBox AlternationCount="2" Grid.Row="1" ItemsSource="{Binding Show.Cues}" HorizontalAlignment="Stretch" Margin="0" Padding="0" SelectedItem="{Binding ActiveCue}" Background="Transparent" BorderThickness="1" BorderBrush="Transparent">
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
                                     <Setter Property="Padding" Value="0" />
@@ -160,31 +120,19 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="ListBoxItem">
-                                                <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderThickness="1">
+                                                <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderThickness="0,0,0,1" BorderBrush="White" Padding="0,10">
                                                     <ContentPresenter />
                                                 </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="White" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsMouseOver" Value="False">
-                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="Transparent" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsSelected" Value="True">
-                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#888" />
-                                                    </Trigger>
-                                                             
-                                                </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
 
                                     <Style.Triggers>
-                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                                            <Setter Property="Background" Value="#000" />
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#444" />
                                         </Trigger>
-                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                                            <Setter Property="Background" Value="#222" />
+                                        <Trigger Property="IsMouseOver" Value="False">
+                                            <Setter Property="Background" Value="Transparent" />
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter Property="Background" Value="#45a4d3" />
@@ -200,13 +148,9 @@
                                             <ColumnDefinition Width="10*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <Border Grid.Column="0" BorderBrush="White" BorderThickness="0,0,1,0" Margin="-1" Padding="1">
-                                            <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="{Binding Number}" FontSize="14" />
-                                        </Border>
-                                        <TextBlock Grid.Column="1" Margin="6,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="{Binding Note}" FontSize="14" />
-                                        <Border Grid.Column="2" BorderBrush="White" BorderThickness="1,0,0,0" Padding="1" Margin="-1">
-                                            <TextBlock Margin="5,2,5,4" Foreground="White" HorizontalAlignment="Left" Text="{Binding Type}" FontSize="14" />
-                                        </Border>
+                                        <TextBlock Grid.Column="0" Foreground="White" Margin="10,0" HorizontalAlignment="Left" Text="{Binding Number}" FontSize="20" />
+                                        <TextBlock Grid.Column="1" Foreground="White" HorizontalAlignment="Left" Text="{Binding Note}" FontSize="20" />
+                                        <TextBlock Grid.Column="2" Foreground="White" HorizontalAlignment="Left" Text="{Binding Type}" FontSize="20" />
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -216,15 +160,17 @@
             </Grid>
         </Border>
 
-
         <!-- Overall Controls -->
-        <Border Grid.Row="2" Margin="10,5,5,10" BorderBrush="#222" BorderThickness="5">
+        <Border Grid.Row="1" Grid.ColumnSpan="3" Padding="20,20,20,50" BorderBrush="AliceBlue" BorderThickness="0,1,0,0" DataContext="{Binding ActiveCueViewModel}">
             <Grid  Background="Black">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -232,107 +178,104 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Text="Master Controls" Grid.Column="0" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center" Grid.ColumnSpan="6"/>
                 <!-- Play/Pause/Stop/Seek Slider/Time Passed/TotalTime -->
-                <Slider Grid.Column="0" Margin="5,5,5,5" Grid.Row="1"/>
-                <TextBlock Grid.Column="1" Margin="5,5,5,5" Text="00:00:00" Foreground="Wheat" Grid.Row="1"/>
-                <TextBlock Grid.Column="2" Margin="5,5,5,5" Text=" / 00:00:00" Foreground="White" Grid.Row="1"/>
-                <Button Grid.Column="3" Content="Play" Margin="5,5,5,5" Grid.Row="1" Click="Play_Button_Clicked"/>
-                <Button Grid.Column="4" Content="Pause" Margin="5,5,5,5" Grid.Row="1"/>
-                <Button Grid.Column="5" Content="Stop" Margin="5,5,5,5" Grid.Row="1" Click="Stop_Button_Clicked"/>
+                <Slider Grid.Column="0" Margin="5,5,5,5" Grid.ColumnSpan="9"/>
+                <Button Grid.Column="0" Content="Play" Margin="5,5,5,5" Grid.Row="1" Click="Play_Button_Clicked"/>
+                <Button Grid.Column="1" Content="Pause" Margin="5,5,5,5" Grid.Row="1"/>
+                <Button Grid.Column="2" Content="Stop" Margin="5,5,5,5" Grid.Row="1" Click="Stop_Button_Clicked"/>
+                <TextBlock Grid.Column="4" Grid.Row="1" Text="{Binding FormattedNumber}" Foreground="Wheat" FontSize="20"/>
+                <TextBlock Grid.Column="5" Grid.Row="1" Text="{Binding Note}" Foreground="White" FontSize="20"/>
+                <TextBlock Grid.Column="7" Text="00:00:00" Foreground="Wheat" Grid.Row="1" FontSize="20"/>
+                <TextBlock Grid.Column="8" Margin="0,0,5,0" Text=" / 00:00:00" Foreground="White" FontSize="20" Grid.Row="1"/>
             </Grid>
         </Border>
 
         <!-- Settings Window -->
-        <Border Grid.Row="3" Margin="10,5,5,10" BorderBrush="#222" BorderThickness="5">
-            <Grid Background="#000">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Border Grid.Column="0" Grid.Row="0" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
-                    <TextBlock Text="Global Settings" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="0" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
-                    <TextBlock Text="Active Cue Settings" Margin="5,5,5,5" Foreground="White" HorizontalAlignment="Center"/>
-                </Border>
-                <Border Grid.Column="0" Grid.Row="1" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1">
-                    <StackPanel Margin="50,50,0,0">
-                        <TextBlock Text="Previewed Cue Settings" Foreground="White" HorizontalAlignment="Center"/>
-                        <Grid Margin="50,10">
-                            <TextBlock Text="Fade In:" Foreground="White"/>
-                            <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="3" />
-                        </Grid>
-                        <Grid Margin="50,10">
-                            <TextBlock Text="Fade Out:" Foreground="White"/>
-                            <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="3" />
-                        </Grid>
-                        <Grid Margin="50,10">
-                            <TextBlock Text="Good:" Foreground="White"/>
-                            <CheckBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" />
-                        </Grid>
-                        <Grid Margin="50,10">
-                            <TextBlock Text="Very Bad:" Foreground="White"/>
-                            <CheckBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" IsChecked="True"/>
-                        </Grid>
-                    </StackPanel>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="1" Margin="5,5,5,5" BorderBrush="White" BorderThickness="1" DataContext="{Binding ActiveCueViewModel}">
-                    <StackPanel Margin="50,50,0,0">
-                        <TextBlock Text="{Binding Title}" Foreground="White" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding Note}" Foreground="White" HorizontalAlignment="Center"/>
-                        <Grid Margin="50,10">
-                            <TextBlock Text="Fade In:" Foreground="White"/>
-                            <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="{Binding FadeInTime}" />
-                        </Grid>
-                        <Grid Margin="50,10">
-                            <TextBlock Text="Fade Out:" Foreground="White"/>
-                            <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="{Binding FadeOutTime}" />
-                        </Grid>
-                        <Grid Margin="50,10">
-                            <TextBlock Text="Loop Cue:" Foreground="White"/>
-                            <CheckBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" IsChecked="{Binding CurrentCue.Loop}"/>
-                        </Grid>
-                        <Grid Margin="50,10">
-                            <TextBlock Text="Duration:" Foreground="White"/>
-                            <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="{Binding Duration}" />
-                        </Grid>
-                        <Grid Margin="50,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Volume:" Foreground="White"/>
-                            <Slider Grid.Column="1" Foreground="White" HorizontalAlignment="Stretch" Maximum="1" Minimum="0" TickFrequency="0.01" Value="{Binding Volume}"/>
-                        </Grid>
-                        <Grid Margin="50,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="10*" />
-                                <ColumnDefinition Width="9*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Video/Image Path:" Foreground="White"/>
-                            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Background="#444" Foreground="White" Text="{Binding CurrentCue.VidPath}" />
-                            <Button Grid.Column="2" Content=" ... "></Button>
-                        </Grid>
-                        <Grid Margin="50,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="10*" />
-                                <ColumnDefinition Width="9*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Light Scene Path:" Foreground="White"/>
-                            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Background="#444" Foreground="White" Text="{Binding CurrentCue.LightPath}" />
-                            <Button Grid.Column="2" Content=" ... "></Button>
-                        </Grid>
-                    </StackPanel>
-                </Border>
-                
-            </Grid>
-        </Border>
+        <Grid Background="#000" Margin="20,20,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0">
+                <TextBlock Text="Global Settings" Foreground="White" FontSize="40" HorizontalAlignment="Center"/>
+            </Border>
+            <Border Grid.Row="1" Padding="0,50">
+                <StackPanel>
+                    <TextBlock Text="Previewed Cue Settings" Foreground="White" HorizontalAlignment="Center"/>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Fade In:" Foreground="White"/>
+                        <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="3" />
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Fade Out:" Foreground="White"/>
+                        <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="3" />
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Good:" Foreground="White"/>
+                        <CheckBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" />
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Very Bad:" Foreground="White"/>
+                        <CheckBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" IsChecked="True"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="3">
+                <TextBlock Text="Selected Cue Settings" Foreground="White" FontSize="40" HorizontalAlignment="Center"/>
+            </Border>
+            <Border Grid.Row="4"  Padding="0,50" DataContext="{Binding ActiveCueViewModel}">
+                <StackPanel>
+                    <TextBlock Text="{Binding Title}" Foreground="White" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Note}" Foreground="White" HorizontalAlignment="Center"/>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Fade In:" Foreground="White"/>
+                        <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="{Binding FadeInTime}" />
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Fade Out:" Foreground="White"/>
+                        <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="{Binding FadeOutTime}" />
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Loop Cue:" Foreground="White"/>
+                        <CheckBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" IsChecked="{Binding CurrentCue.Loop}"/>
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <TextBlock Text="Duration:" Foreground="White"/>
+                        <TextBox Width="50" HorizontalAlignment="Right" Background="#444" Foreground="White" Text="{Binding Duration}" />
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Volume:" Foreground="White"/>
+                        <Slider Grid.Column="1" Foreground="White" HorizontalAlignment="Stretch" Maximum="1" Minimum="0" TickFrequency="0.01" Value="{Binding Volume}"/>
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10*" />
+                            <ColumnDefinition Width="9*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Video/Image Path:" Foreground="White"/>
+                        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Background="#444" Foreground="White" Text="{Binding CurrentCue.VidPath}" />
+                        <Button Grid.Column="2" Content=" ... "></Button>
+                    </Grid>
+                    <Grid Margin="50,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10*" />
+                            <ColumnDefinition Width="9*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Light Scene Path:" Foreground="White"/>
+                        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Background="#444" Foreground="White" Text="{Binding CurrentCue.LightPath}" />
+                        <Button Grid.Column="2" Content=" ... "></Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

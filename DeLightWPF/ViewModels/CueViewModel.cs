@@ -14,6 +14,8 @@ namespace DeLightWPF.ViewModels
 
         public string Note => CurrentCue?.Note ?? "";
 
+        public string FormattedNumber => CurrentCue == null ? "" : "#" + CurrentCue.Number + ": ";
+
         #region Verified Properties
         public double FadeInTime {
             get => CurrentCue?.FadeInTime ?? GlobalSettings.Instance.DefaultFadeTime;
@@ -79,6 +81,7 @@ namespace DeLightWPF.ViewModels
             OnPropertyChanged(nameof(Volume));
             OnPropertyChanged(nameof(Title));
             OnPropertyChanged(nameof(Note));
+            OnPropertyChanged(nameof(FormattedNumber));
         }
     }
 }
