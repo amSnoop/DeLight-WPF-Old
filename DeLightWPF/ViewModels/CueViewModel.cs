@@ -18,7 +18,7 @@ namespace DeLightWPF.ViewModels
 
         #region Verified Properties
         public double FadeInTime {
-            get => CurrentCue?.FadeInTime ?? GlobalSettings.Instance.DefaultFadeTime;
+            get => CurrentCue?.FadeInTime ?? GlobalSettings.Instance.DefaultCue.FadeInTime;
             set
             {
                 if(value < 0)
@@ -30,7 +30,7 @@ namespace DeLightWPF.ViewModels
             }
         }
         public double FadeOutTime {
-            get => CurrentCue?.FadeOutTime ?? GlobalSettings.Instance.DefaultFadeTime;
+            get => CurrentCue?.FadeOutTime ?? GlobalSettings.Instance.DefaultCue.FadeOutTime;
             set
             {
                 if (value < 0)
@@ -43,7 +43,7 @@ namespace DeLightWPF.ViewModels
         }
 
         public double Volume {
-              get => CurrentCue?.Volume ?? GlobalSettings.Instance.DefaultVolume;
+              get => CurrentCue?.Volume ?? GlobalSettings.Instance.DefaultCue.Volume;
             set
             {
                 if (value < 0)
@@ -59,7 +59,7 @@ namespace DeLightWPF.ViewModels
 
         public double Duration
         {
-            get => CurrentCue?.Duration ?? GlobalSettings.Instance.DefaultDuration;
+            get => CurrentCue?.Duration ?? GlobalSettings.Instance.DefaultCue.Duration;
             set
             {
                 if (value < 0)

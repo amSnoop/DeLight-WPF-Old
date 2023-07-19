@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,12 +10,10 @@ using DeLightWPF.Utilities;
 using DeLightWPF.ViewModels;
 using Microsoft.Win32;
 
-namespace DeLightWPF
-{
-    public partial class MainWindowViewModel : ObservableObject
-    {
+namespace DeLightWPF {
+    public partial class MainWindowViewModel : ObservableObject {
         private readonly MainWindow _window;
-        
+
         private List<Screen> _screenObjects;
         [ObservableProperty]
         private string selectedMonitor = "";
@@ -47,16 +46,31 @@ namespace DeLightWPF
         private int factor2 = 35;
         [ObservableProperty]
         private int factor3 = 40;
-        public void UpdateWindowSize()
-        {
+
+        public Dictionary<FadeType, string> FadeTypeStrings { get; } = new() {
+            { FadeType.ShowXPress, "ShowXPress" },
+            { FadeType.FadeOver, "Fade Over" }
+        };
+        public Dictionary<EndAction, string> EndActionStrings { get; } = new() {
+            { EndAction.Loop, "Loop" },
+            { EndAction.FadeAfterEnd, "Fade After End" },
+            { EndAction.FadeBeforeEnd, "Fade Before End" },
+            { EndAction.Freeze, "Freeze" }
+        };
+
+
+
+
+
+
+        public void UpdateWindowSize() {
             OnPropertyChanged(nameof(TitleFontSize));
             OnPropertyChanged(nameof(SubtitleFontSize));
             OnPropertyChanged(nameof(BodyFontSize));
             OnPropertyChanged(nameof(CueFontSize));
             OnPropertyChanged(nameof(Padding));
         }
-        public double TitleFontSize
-        {
+        public double TitleFontSize {
             get
             {
                 double baseFontSize = 30;
@@ -79,33 +93,44 @@ namespace DeLightWPF
 
         private Cue? activeCue;
 
-        public Cue? ActiveCue
-        {
+        public Cue? ActiveCue {
             get => activeCue;
             set
             {
-                if(activeCue is not null) activeCue.IsActive = false;
-                if (SetProperty(ref activeCue, value))
-                {
-                    if(activeCue is not null) activeCue.IsActive = true;
+                if (activeCue is not null) {
+                    activeCue.IsActive = false;
+                    activeCue.PropertyChanged -= ActiveCue_PropertyChanged;
+                }
+                if (SetProperty(ref activeCue, value)) {
+                    if (activeCue is not null) {
+                        activeCue.IsActive = true;
+                        activeCue.PropertyChanged += ActiveCue_PropertyChanged;
+                    }
                     // Notify the detail view model to update
                     ActiveCueViewModel.CurrentCue = value;
-                }
+                };
             }
         }
 
-        public Cue? SelectedCue
-        {
+        private void ActiveCue_PropertyChanged(object? sender, PropertyChangedEventArgs e) {
+            if (e.PropertyName == nameof(Cue.Volume)) {
+                VideoWindow.SetVolume(ActiveCue?.Volume ?? 0);
+            }
+        }
+
+        public Cue? SelectedCue {
             get => selectedCue;
             set
             {
-                if (SetProperty(ref selectedCue, value))
-                {
+                if (SetProperty(ref selectedCue, value)) {
                     // Notify the detail view model to update
                     PreviewCueViewModel.CurrentCue = value;
                 }
             }
         }
+
+
+
 
         #endregion
 
@@ -113,56 +138,46 @@ namespace DeLightWPF
         public bool VideoIsVisible => VideoWindow.IsVisible;
 
 
-        partial void OnSelectedMonitorChanged(string value)
-        {
+        partial void OnSelectedMonitorChanged(string value) {
             var screen = _screenObjects[Monitors.IndexOf(SelectedMonitor)];
             VideoWindow.SetScreen(screen);
         }
-        partial void OnMasterVolChanged(double value)
-        {
-            VideoWindow.SetMasterVolume(value);
-        }
 
-        public MainWindowViewModel(MainWindow window)
-        {
+
+        public MainWindowViewModel(MainWindow window) {
             show = Show.Load(GlobalSettings.Instance.LastShowPath);
             _window = window;
             _screenObjects = Screen.AllScreens.ToList();
             Monitors = _screenObjects.Select((s, i) => $"Monitor {i + 1}: {s.Bounds.Width}x{s.Bounds.Height}").ToList();
-            if (Screen.PrimaryScreen == null)
-            {
+            if (Screen.PrimaryScreen == null) {
                 SelectedMonitor = Monitors.FirstOrDefault() ?? "";
                 VideoWindow.SetScreen(_screenObjects.First());
             }
-            else
-            {
+            else {
                 SelectedMonitor = Monitors[_screenObjects.IndexOf(Screen.PrimaryScreen)];
                 VideoWindow.SetScreen(Screen.PrimaryScreen);
             }
             SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+            _window.DefaultCueDisplay.DataContext = GlobalSettings.Instance.DefaultCue;
+            _window.SettingsDisplay.DataContext = GlobalSettings.Instance;
         }
 
-        private void SystemEvents_DisplaySettingsChanged(object? sender, EventArgs e)
-        {
+        private void SystemEvents_DisplaySettingsChanged(object? sender, EventArgs e) {
             var screen = _screenObjects[_window.MonitorSelector.SelectedIndex];
             _screenObjects = Screen.AllScreens.ToList();
             Monitors = _screenObjects.Select((s, i) => $"Monitor {i + 1}: {s.Bounds.Width}x{s.Bounds.Height}").ToList();
-            try
-            {
+            try {
                 SelectedMonitor = Monitors[_screenObjects.IndexOf(screen)];
             }
-            catch (Exception)
-            {
+            catch (Exception) {
                 SelectedMonitor = Monitors.FirstOrDefault() ?? "";
             }
         }
-        public void HideVideoPlayback()
-        {
+        public void HideVideoPlayback() {
             VideoWindow.Hide();
         }
 
-        public void PlayNextCue()
-        {
+        public void PlayNextCue() {
             // The show is over and no cue is selected
             if (ShowComplete && SelectedCue == null)
                 return;
@@ -172,8 +187,7 @@ namespace DeLightWPF
 
             SelectedCue ??= Show.Cues.FirstOrDefault();
 
-            if (SelectedCue != null)
-            {
+            if (SelectedCue != null) {
                 ActiveCue = SelectedCue;
                 int index = Show.Cues.IndexOf(SelectedCue);
 
@@ -184,14 +198,12 @@ namespace DeLightWPF
             }
         }
 
-        public void Play()
-        { 
+        public void Play() {
             VideoWindow.Show();
             VideoWindow.Play(ActiveCue);
             _window.Activate();
         }
-        public void Stop()
-        {
+        public void Stop() {
             VideoWindow.Stop();
             _window.Activate();
 

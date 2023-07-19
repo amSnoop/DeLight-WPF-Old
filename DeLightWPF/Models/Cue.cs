@@ -12,6 +12,17 @@ namespace DeLightWPF.Models
         ImgLight,
         LightOnly,
     }
+    public enum EndAction {
+        Loop,
+        FadeAfterEnd,
+        FadeBeforeEnd,
+        Freeze,
+    }
+    public enum FadeType {
+        ShowXPress,
+        FadeOver,
+    }
+
     public partial class Cue : ObservableObject
     {
         [ObservableProperty]
@@ -35,21 +46,27 @@ namespace DeLightWPF.Models
         [ObservableProperty]
         private bool loop;
         [ObservableProperty]
-        private double volume;
+        private double volume;//0 to 1
         [ObservableProperty]
         private double duration;
-        public Cue()
-        {
-            Number = "";
-            Note = "";
-            Type = CueType.Blackout;
-            VidPath = "";
-            LightPath = "";
-            FadeInTime = GlobalSettings.Instance.DefaultFadeTime;
-            FadeOutTime = GlobalSettings.Instance.DefaultFadeTime;
+        [ObservableProperty]
+        private EndAction lightEndAction;
+        [ObservableProperty]
+        private EndAction vidEndAction;
+        [ObservableProperty]
+        private FadeType fadeType;
+
+        public Cue() {
+            Number = "0";
+            FadeInTime = 3;
+            FadeOutTime = 3;
+            Volume = .2;
+            Note = "New Cue";
+            Duration = 0;
             Loop = false;
-            Volume = GlobalSettings.Instance.DefaultVolume;
-            Duration = GlobalSettings.Instance.DefaultDuration;
+            VidEndAction = EndAction.Freeze;
+            LightEndAction = EndAction.Freeze;
+            FadeType = FadeType.FadeOver;
         }
     }
 }

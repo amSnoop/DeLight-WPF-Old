@@ -48,13 +48,6 @@ namespace DeLightWPF
         {
             e.Handled = true;
         }
-        public void SetMasterVol(double value)
-        {
-            foreach (MediaElement mediaElement in Container.Children)
-            {
-                mediaElement.Volume ;//do this i nthe other class so you can use the cue volume.
-            }
-        }
         //returns false if a video file cannot be played or is not found, but there is a string provided in the path.
         public bool Play(Cue? cue)
         {
@@ -83,6 +76,12 @@ namespace DeLightWPF
             else
                 FadeOutCurrentMediaElement(TimeSpan.FromSeconds(3));
             return foundVideo;
+        }
+
+        public void SetVolume(double vol) {
+            _currentMediaElement?.Dispatcher.Invoke(() => {
+                _currentMediaElement.Volume = vol;
+            });
         }
         private bool SetupNewMediaElement(Cue cue, TimeSpan fadeInDuration)
         {

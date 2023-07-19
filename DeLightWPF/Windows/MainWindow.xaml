@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:DeLightWPF" d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="DeLight WPF Version" 
@@ -22,7 +21,6 @@
         <SolidColorBrush x:Key="TextBaseBrush" Color="White" />
         <SolidColorBrush x:Key="TextAltBrush" Color="Wheat" />
         <SolidColorBrush x:Key="AccentBrush" Color="#45a4d3" />
-        <sys:Double x:Key="RowHeight" >50</sys:Double>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="FontSize" Value="{Binding Path=DataContext.BodyFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
             <Setter Property="Background" Value="#444" />
@@ -50,20 +48,16 @@
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <!-- Previewer window -->
             <RowDefinition Height="Auto" />
-            <!-- Controls Window -->
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.5*" MinWidth="20" />
             <ColumnDefinition Width="10*" MinWidth="300"/>
             <ColumnDefinition Width="3*" />
-            <!-- Previewer / Controls / Settings window -->
             <ColumnDefinition Width="30*" />
             <ColumnDefinition Width="3*" />
-            <!-- Cue List Window -->
-            <ColumnDefinition Width="20*" MinWidth="350"/>
+            <ColumnDefinition Width="22*" MinWidth="350"/>
             <ColumnDefinition Width="1.5*" MinWidth="20" />
         </Grid.ColumnDefinitions>
 
@@ -76,7 +70,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="1.2*" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height=".3*" />
+                    <RowDefinition Height=".25*" />
                     <RowDefinition Height="*" MinHeight="180"/>
                 </Grid.RowDefinitions>
                 <TextBlock HorizontalAlignment="Center" Grid.ColumnSpan="2" Text="Previewer" Style="{StaticResource Title}" />
@@ -99,7 +93,7 @@
                 <Border Grid.Row="4" DataContext="{Binding PreviewCueViewModel}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height=".5*" MinHeight="20"/>
+                            <RowDefinition Height="1.1*" MinHeight="20"/>
                             <RowDefinition Height=".5*" MinHeight="20"/>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -158,7 +152,7 @@
         </Border>
 
         <!-- Cue List Window -->
-        <Border Grid.Column="5" Grid.Row="0" Margin="0,20,20,20">
+        <Border Grid.Column="5" Grid.Row="0" Margin="0,20,0,20">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -192,6 +186,13 @@
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter Property="Background" Value="#468" />
                                         </Trigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsMouseOver" Value="True" />
+                                                <Condition Property="IsSelected" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Background" Value="#579" />
+                                        </MultiTrigger>
                                         <DataTrigger Binding="{Binding IsActive}" Value="True">
                                             <Setter Property="Background" Value="{StaticResource AccentBrush}" />
                                         </DataTrigger>
@@ -202,12 +203,12 @@
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="10*" />
-                                            <ColumnDefinition Width="2.5*" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Style="{StaticResource Subtitle}" Margin="10,0" HorizontalAlignment="Left" Text="{Binding Number}" />
-                                        <TextBlock Grid.Column="1" Style="{StaticResource Subtitle}" HorizontalAlignment="Left" Text="{Binding Note}" />
+                                        <TextBlock Grid.Column="1" Style="{StaticResource Subtitle}" HorizontalAlignment="Left" Text="{Binding Note}" TextTrimming="CharacterEllipsis"/>
                                         <TextBlock Grid.Column="2" Style="{StaticResource Subtitle}" Margin="10,0" TextAlignment="Right" Text="{Binding Type}" />
                                     </Grid>
                                 </DataTemplate>
@@ -225,6 +226,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width=".5*" MinWidth="100" MaxWidth="250"/>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -237,32 +239,32 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <!-- Play/Pause/Stop/Seek Slider/Time Passed/TotalTime -->
-                <Slider Grid.Column="0" Margin="5,5,5,5" Grid.ColumnSpan="9" Minimum="0" Maximum="100" />
+                <Slider Grid.Column="0" Margin="5,5,5,5" Grid.ColumnSpan="19" Minimum="0" Maximum="100" />
                 <Button Grid.Column="0" Content="Play" Margin="5,5,5,5" Grid.Row="1" Click="Play_Button_Clicked"/>
                 <Button Grid.Column="1" Content="Pause" Margin="5,5,5,5" Grid.Row="1"/>
                 <Button Grid.Column="2" Content="Stop" Margin="5,5,5,5" Grid.Row="1" Click="Stop_Button_Clicked"/>
-                <TextBlock Grid.Column="4" Grid.Row="1" Text="{Binding FormattedNumber}" Foreground="{StaticResource TextAltBrush}" Style="{StaticResource Title}" />
-                <TextBlock Grid.Column="5" Grid.Row="1" Text="{Binding Note}" Style="{StaticResource Title}" />
-                <TextBlock Grid.Column="7" Text="00:00:00" Foreground="{StaticResource TextAltBrush}" Grid.Row="1"  Style="{StaticResource Title}" />
-                <TextBlock Grid.Column="8" Margin="0,0,5,0" Text=" / 00:00:00" Style="{StaticResource Title}" Grid.Row="1" />
+                <Slider Grid.Column="3" Grid.Row ="1"  Minimum="0" Maximum="1" VerticalAlignment="Center" Value="{Binding CurrentCue.Volume}" />
+                <TextBlock Grid.Column="5" Grid.Row="1" Text="{Binding FormattedNumber}" Foreground="{StaticResource TextAltBrush}" Style="{StaticResource Title}" />
+                <TextBlock Grid.Column="6" Grid.Row="1" Text="{Binding Note}" Style="{StaticResource Title}" />
+                <TextBlock Grid.Column="8" Text="00:00:00" Foreground="{StaticResource TextAltBrush}" Grid.Row="1"  Style="{StaticResource Title}" />
+                <TextBlock Grid.Column="9" Margin="0,0,5,0" Text=" / 00:00:00" Style="{StaticResource Title}" Grid.Row="1" />
             </Grid>
         </Border>
 
         <!-- Settings Window -->
-        <Grid Grid.Column="1" Margin="20,20,0,20">
+        <Grid Grid.Column="1" Margin="0,20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" MinHeight="175"/>
+                <RowDefinition Height="*" MinHeight="140"/>
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" MinHeight="175"/>
+                <RowDefinition Height="*" MinHeight="220"/>
             </Grid.RowDefinitions>
             <Border Grid.Row="0">
-                <TextBlock Text="Settings" Style="{StaticResource Title}" TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+                <TextBlock Text="Settings" Style="{StaticResource Title}" TextWrapping="WrapWithOverflow"/>
             </Border>
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" x:Name="SettingsDisplay">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -275,50 +277,56 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Output Screen:" VerticalAlignment="Center"/>
-                <ComboBox x:Name="MonitorSelector" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" ItemsSource="{Binding Monitors}" SelectedIndex="0" SelectedItem="{Binding SelectedMonitor}"/>
-
-                <TextBlock Grid.Row="1" Text="Master Volume:" VerticalAlignment="Center"/>
-                <Slider Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Value="{Binding MasterVol}" Minimum="0" Maximum="5" VerticalAlignment="Center" />
-
-                <TextBlock Grid.Row="4" Text="Loop Cue:" VerticalAlignment="Center"/>
-                <CheckBox Grid.Row="4" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding CurrentCue.Loop}"/>
-
-                <TextBlock Grid.Row="5" Text="Duration:" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="5" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Duration}" />
+                
+                <TextBlock Grid.Row="1" Text="Output Screen:" VerticalAlignment="Center"/>
+                <ComboBox x:Name="MonitorSelector" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" ItemsSource="{Binding DataContext.Monitors, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedIndex="0" SelectedItem="{Binding DataContext.SelectedMonitor, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+                
+                
+                <TextBlock Grid.Row="2" Text="Audio Device:" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
 
-                <TextBlock Grid.Row="6" Text="Volume:" VerticalAlignment="Center"/>
-                <Slider Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Maximum="1" Minimum="0" TickFrequency="0.01" Value="{Binding Volume}"/>
-
-                <TextBlock Grid.Row="7" Text="Video/Image Path:" VerticalAlignment="Center"/>
-
-                <Grid Grid.Row="7" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <TextBlock Grid.Row="3" Text="Show Path:" VerticalAlignment="Center"/>
+                <Grid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding CurrentCue.VidPath}" />
+                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding LastShowPath}" />
                     <Button Grid.Column="1" Content=" . . . " VerticalAlignment="Center" FontSize="{Binding Path=DataContext.BodyFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                 </Grid>
 
-                <TextBlock Grid.Row="8" Text="Light Scene Path:" VerticalAlignment="Center"/>
-                <Grid Grid.Row="8" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+
+                <TextBlock Grid.Row="4" Text="SXP Light Show:" VerticalAlignment="Center"/>
+                <Grid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding CurrentCue.LightPath}" />
+                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding VideoDirectory}" />
+                    <Button Grid.Column="1" Content=" . . . " VerticalAlignment="Center" FontSize="{Binding Path=DataContext.BodyFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                </Grid>
+
+
+                <TextBlock Grid.Row="5" Text="Video Folder:" VerticalAlignment="Center"/>
+                <Grid Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding LightShowDirectory}" />
                     <Button Grid.Column="1" Content=" . . . " VerticalAlignment="Center" FontSize="{Binding Path=DataContext.BodyFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                 </Grid>
             </Grid>
+            
+            
             <Border Grid.Row="3">
-                <TextBlock Text="Defaults" Foreground="White" FontSize="{Binding TitleFontSize}" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+                <TextBlock Text="Defaults" Style="{StaticResource Title}" TextWrapping="WrapWithOverflow"/>
             </Border>
-            <Grid Grid.Row="4">
+            <Grid Grid.Row="4" x:Name="DefaultCueDisplay">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height=".5*" />
-                    <RowDefinition Height=".5*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -331,45 +339,30 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Title}" Grid.ColumnSpan="2" Style="{StaticResource Subtitle}"/>
-                <TextBlock Grid.Row="1" Text="{Binding Note}" Grid.ColumnSpan="2" HorizontalAlignment="Center" />
 
-                <TextBlock Grid.Row="2" Text="Fade In:" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="2" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding FadeInTime}" />
+                <TextBlock Grid.Row="1" Text="Fade In:" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding FadeInTime}" />
 
-                <TextBlock Grid.Row="3" Text="Fade Out:" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="3" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding FadeOutTime}" />
+                <TextBlock Grid.Row="2" Text="Fade Out:" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding FadeOutTime}" />
 
+                <TextBlock Grid.Row="3" Text="Duration:" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Duration}" />
+                
                 <TextBlock Grid.Row="4" Text="Loop Cue:" VerticalAlignment="Center"/>
-                <CheckBox Grid.Row="4" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding CurrentCue.Loop}"/>
+                <CheckBox Grid.Row="4" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding Loop}"/>
 
-                <TextBlock Grid.Row="5" Text="Duration:" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="5" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Duration}" />
+                <TextBlock Grid.Row="5" Text="Volume:" VerticalAlignment="Center"/>
+                <Slider Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Maximum="1" Minimum="0" TickFrequency="0.01" Value="{Binding Volume}"/>
 
-
-                <TextBlock Grid.Row="6" Text="Volume:" VerticalAlignment="Center"/>
-                <Slider Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Maximum="1" Minimum="0" TickFrequency="0.01" Value="{Binding Volume}"/>
-
-                <TextBlock Grid.Row="7" Text="Video/Image Path:" VerticalAlignment="Center"/>
-
-                <Grid Grid.Row="7" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding CurrentCue.VidPath}" />
-                    <Button Grid.Column="1" Content=" . . . " VerticalAlignment="Center" FontSize="{Binding Path=DataContext.BodyFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                </Grid>
-
-                <TextBlock Grid.Row="8" Text="Light Scene Path:" VerticalAlignment="Center"/>
-                <Grid Grid.Row="8" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding CurrentCue.LightPath}" />
-                    <Button Grid.Column="1" Content=" . . . " VerticalAlignment="Center" FontSize="{Binding Path=DataContext.BodyFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                </Grid>
+                <TextBlock Grid.Row="6" Text="Fade In Behavior:" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedValue="{Binding FadeType, Mode=TwoWay}" ItemsSource="{Binding DataContext.FadeTypeStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
+                
+                <TextBlock Grid.Row="7" Text="Light Scene End Action:" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"  SelectedValue="{Binding LightEndAction, Mode=TwoWay}" ItemsSource="{Binding DataContext.EndActionStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
+                
+                <TextBlock Grid.Row="8" Text="Video End Action:" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"  SelectedValue="{Binding VidEndAction, Mode=TwoWay}" ItemsSource="{Binding DataContext.EndActionStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
             </Grid>
         </Grid>
     </Grid>

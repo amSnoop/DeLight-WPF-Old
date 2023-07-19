@@ -1,4 +1,5 @@
-﻿using LibUsbDotNet.DeviceNotify;
+﻿using DeLightWPF.Utilities;
+using LibUsbDotNet.DeviceNotify;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +24,8 @@ namespace DeLightWPF
 
         public MainWindow()
         {
+            Top = GlobalSettings.Instance.LastScreenTop;
+            Left = GlobalSettings.Instance.LastScreenLeft;
             InitializeComponent();
             DataContext = new MainWindowViewModel(this);
 
@@ -30,9 +33,12 @@ namespace DeLightWPF
             usbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent;
             PreviewKeyDown += OnKeyDown;
             SizeChanged += MainWindow_OnSizeChanged;
-
+            MouseDown += MainWindow_MouseDown;
         }
 
+        public void MainWindow_MouseDown(object sender, MouseButtonEventArgs e) {
+            Keyboard.ClearFocus();
+        }
 
         private void OnDeviceNotifyEvent(object? sender, DeviceNotifyEventArgs e)
         {
@@ -51,8 +57,9 @@ namespace DeLightWPF
             }
         }
 
-        protected override void OnClosed(EventArgs e)
-        {
+        protected override void OnClosed(EventArgs e) {
+            GlobalSettings.Instance.LastScreenTop = (int)Top;
+            GlobalSettings.Instance.LastScreenLeft = (int)Left;
             base.OnClosed(e);
             (DataContext as MainWindowViewModel)?.HideVideoPlayback();
 
@@ -118,11 +125,6 @@ namespace DeLightWPF
             slider.Value = value;
         }
         #endregion
-
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
 
         private void Play_Button_Clicked(object sender, RoutedEventArgs e) {
             if (DataContext is MainWindowViewModel viewModel)
