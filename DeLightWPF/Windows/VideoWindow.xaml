@@ -18,5 +18,6 @@
         WindowStartupLocation="Manual"
         ResizeMode="NoResize">
     <Grid x:Name="Container" Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+        <!--In here the MediaElements will be contained-->
     </Grid>
 </Window>

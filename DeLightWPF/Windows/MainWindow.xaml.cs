@@ -28,25 +28,10 @@ namespace DeLightWPF
 
             usbDeviceNotifier = DeviceNotifier.OpenDeviceNotifier();
             usbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent;
-            KeyDown += OnKeyDown;
+            PreviewKeyDown += OnKeyDown;
             SizeChanged += MainWindow_OnSizeChanged;
+
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         private void OnDeviceNotifyEvent(object? sender, DeviceNotifyEventArgs e)
@@ -73,9 +58,10 @@ namespace DeLightWPF
 
         }
         protected void OnKeyDown(object? sender, KeyEventArgs e)
+        
         {
             base.OnKeyDown(e);
-            if (e.Key == Key.Escape && ((DataContext as MainWindowViewModel)?.VideoIsVisible ?? false))
+            if (e.Key == Key.Escape && ((DataContext as MainWindowViewModel)?.VideoIsVisible ?? false) && Keyboard.FocusedElement is not TextBox)
             {
                 count++;
                 if (count == 2)
@@ -83,6 +69,12 @@ namespace DeLightWPF
                     (DataContext as MainWindowViewModel)?.HideVideoPlayback();
                     count = 0;
                 }
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Space && DataContext is MainWindowViewModel vm && Keyboard.FocusedElement is not TextBox)
+            {
+                vm.PlayNextCue();
+                e.Handled = true;
             }
             else
                 count = 0;
@@ -141,9 +133,9 @@ namespace DeLightWPF
                 viewModel.Stop();
         }
 
-        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e) {
+        private void MainWindow_OnSizeChanged(object? sender, SizeChangedEventArgs e) {
             if (DataContext is MainWindowViewModel vm) {
-                vm.UpdateFonts();
+                vm.UpdateWindowSize();
             }
         }
     }

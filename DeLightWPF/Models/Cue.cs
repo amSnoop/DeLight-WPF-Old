@@ -26,6 +26,9 @@ namespace DeLightWPF.Models
         private string lightPath = "";
 
         [ObservableProperty]
+        private bool isActive = false;
+
+        [ObservableProperty]
         private double fadeInTime;
         [ObservableProperty]
         private double fadeOutTime;

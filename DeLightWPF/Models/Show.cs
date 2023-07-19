@@ -67,30 +67,35 @@ namespace DeLightWPF.Models
                 Number = "1",
                 Note = "This was a triumph",
                 Type = CueType.VidLight,
-                VidPath = "C:\\Users\\abrandt\\OneDrive - Environmental Quality Resource\\Desktop\\Finished Video Tracks\\1. Grease Title Song.mp4"
+                VidPath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\cutscene example.mp4",
+                FadeInTime = 45
             });
             show.Cues.Add(new Cue()
             {
                 Number = "2",
                 Note = "I'm leaving a note here:",
+                VidPath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\elite dont give a fuck.mp4",
                 Type = CueType.ImgLight
             });
             show.Cues.Add(new Cue()
             {
                 Number = "3",
                 Note = "Huge success!",
+                VidPath = "No",
                 Type = CueType.VidLight
             });
             show.Cues.Add(new Cue()
             {
                 Number = "4",
                 Note = "It's hard to overstate my satisfaction.",
+                VidPath = "C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg",
                 Type = CueType.LightOnly
             });
             show.Cues.Add(new Cue()
             {
                 Number = "5",
                 Note = "Aperture Science",
+                VidPath = "\"C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg\"",
                 Type = CueType.LightOnly
             });
             show.Cues.Add(new Cue()
