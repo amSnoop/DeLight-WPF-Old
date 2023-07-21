@@ -11,14 +11,17 @@ namespace DeLightWPF.Models
         VidLight,
         ImgLight,
         LightOnly,
+        WARNING
     }
-    public enum EndAction {
+    public enum EndAction
+    {
         Loop,
         FadeAfterEnd,
         FadeBeforeEnd,
         Freeze,
     }
-    public enum FadeType {
+    public enum FadeType
+    {
         ShowXPress,
         FadeOver,
     }
@@ -30,10 +33,10 @@ namespace DeLightWPF.Models
         [ObservableProperty]
         private string note = "";
         [ObservableProperty]
-        private CueType type;
-        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Type))]
         private string vidPath = "";
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Type))]
         private string lightPath = "";
 
         [ObservableProperty]
@@ -56,7 +59,36 @@ namespace DeLightWPF.Models
         [ObservableProperty]
         private FadeType fadeType;
 
-        public Cue() {
+        public CueType Type
+        {
+            get
+            {
+                bool hasVid = IsVideoFileType();
+                bool hasImg = IsImageFileType();
+                bool hasLight = !string.IsNullOrEmpty(LightPath) && IsLightFileType();
+
+                if (string.IsNullOrEmpty(VidPath) && string.IsNullOrEmpty(LightPath))
+                    return CueType.Blackout;
+                else if (hasVid && hasLight)
+                    return CueType.VidLight;
+                else if (hasImg && hasLight)
+                    return CueType.ImgLight;
+                else if (hasVid)
+                    return CueType.VidOnly;
+                else if (hasImg)
+                    return CueType.ImgOnly;
+                else if (hasLight)
+                    return CueType.LightOnly;
+                else
+                    return CueType.WARNING;
+            }
+        }
+
+
+
+
+        public Cue()
+        {
             Number = "0";
             FadeInTime = 3;
             FadeOutTime = 3;
@@ -68,5 +100,19 @@ namespace DeLightWPF.Models
             LightEndAction = EndAction.Freeze;
             FadeType = FadeType.FadeOver;
         }
+
+        private bool IsImageFileType()
+        {
+            return VidPath.EndsWith(".jpg") || VidPath.EndsWith(".png") || VidPath.EndsWith(".bmp") || VidPath.EndsWith(".jpeg");
+        }
+        private bool IsVideoFileType()
+        {
+            return VidPath.EndsWith(".mp4") || VidPath.EndsWith(".mov") || VidPath.EndsWith(".avi") || VidPath.EndsWith(".wmv");
+        }
+        private bool IsLightFileType()
+        {
+            return LightPath.EndsWith(".scex");
+        }
+
     }
 }

@@ -38,6 +38,8 @@ namespace DeLightWPF
 
         public void MainWindow_MouseDown(object sender, MouseButtonEventArgs e) {
             Keyboard.ClearFocus();
+            Activate();
+            Focus();
         }
 
         private void OnDeviceNotifyEvent(object? sender, DeviceNotifyEventArgs e)
@@ -73,7 +75,7 @@ namespace DeLightWPF
                 count++;
                 if (count == 2)
                 {
-                    (DataContext as MainWindowViewModel)?.HideVideoPlayback();
+                     (DataContext as MainWindowViewModel)?.HideVideoPlayback();
                     count = 0;
                 }
                 e.Handled = true;

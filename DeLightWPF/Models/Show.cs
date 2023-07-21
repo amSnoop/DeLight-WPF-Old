@@ -9,11 +9,11 @@ namespace DeLightWPF.Models
     public partial class Show : ObservableObject
     {
         [ObservableProperty]
-        private string name;
+        private string name = "";
         [ObservableProperty]
-        private string path;
+        private string path = "";
         [ObservableProperty]
-        private List<Cue> cues;
+        private List<Cue> cues = new();
 
         public Cue? this[int i]
         {
@@ -66,55 +66,47 @@ namespace DeLightWPF.Models
             {
                 Number = "1",
                 Note = "This was a triumph",
-                Type = CueType.VidLight,
                 VidPath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\cutscene example.mp4",
-                FadeInTime = 45
+                FadeInTime = 3
             });
             show.Cues.Add(new Cue()
             {
                 Number = "2",
                 Note = "I'm leaving a note here:",
                 VidPath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\elite dont give a fuck.mp4",
-                Type = CueType.ImgLight
             });
             show.Cues.Add(new Cue()
             {
                 Number = "3",
                 Note = "Huge success!",
                 VidPath = "No",
-                Type = CueType.VidLight
             });
             show.Cues.Add(new Cue()
             {
                 Number = "4",
                 Note = "It's hard to overstate my satisfaction.",
                 VidPath = "C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg",
-                Type = CueType.LightOnly
             });
             show.Cues.Add(new Cue()
             {
                 Number = "5",
                 Note = "Aperture Science",
                 VidPath = "\"C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg\"",
-                Type = CueType.LightOnly
             });
             show.Cues.Add(new Cue()
             {
                 Number = "6",
                 Note = "We do what we must, because, we can.",
-                Type = CueType.ImgOnly
             });
             show.Cues.Add(new Cue()
             {
                 Number = "7",
                 Note = "For the good of all of us,",
-                Type = CueType.VidOnly
             });
             show.Cues.Add(new Cue()
             {
                 Number = "8",
                 Note = "Except the ones who are dead.",
-                Type = CueType.VidLight
             });
             return show;
         }

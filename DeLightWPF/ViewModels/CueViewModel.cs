@@ -10,6 +10,19 @@ namespace DeLightWPF.ViewModels
         [ObservableProperty]
         private Cue? currentCue;
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(FormattedDuration))]
+        private double realDuration;
+
+        public string FormattedDuration => " / " + TimeSpan.FromSeconds(Duration).ToString(@"hh\:mm\:ss");
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(FormattedCurrentTime))]
+        private double currentTime;
+
+        public string FormattedCurrentTime => TimeSpan.FromSeconds(CurrentTime).ToString(@"hh\:mm\:ss");
+
+
         public string Title => CurrentCue == null ? "No Cue Selected" : "Settings for Cue #" + CurrentCue.Number;
 
         public string Note => CurrentCue?.Note ?? "";

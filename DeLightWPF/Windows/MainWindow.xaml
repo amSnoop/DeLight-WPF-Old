@@ -246,8 +246,8 @@
                 <Slider Grid.Column="3" Grid.Row ="1"  Minimum="0" Maximum="1" VerticalAlignment="Center" Value="{Binding CurrentCue.Volume}" />
                 <TextBlock Grid.Column="5" Grid.Row="1" Text="{Binding FormattedNumber}" Foreground="{StaticResource TextAltBrush}" Style="{StaticResource Title}" />
                 <TextBlock Grid.Column="6" Grid.Row="1" Text="{Binding Note}" Style="{StaticResource Title}" />
-                <TextBlock Grid.Column="8" Text="00:00:00" Foreground="{StaticResource TextAltBrush}" Grid.Row="1"  Style="{StaticResource Title}" />
-                <TextBlock Grid.Column="9" Margin="0,0,5,0" Text=" / 00:00:00" Style="{StaticResource Title}" Grid.Row="1" />
+                <TextBlock Grid.Column="8" Text="{Binding FormattedCurrentTime}" Foreground="{StaticResource TextAltBrush}" Grid.Row="1"  Style="{StaticResource Title}" />
+                <TextBlock Grid.Column="9" Margin="0,0,5,0" Text="{Binding FormattedDuration}" Style="{StaticResource Title}" Grid.Row="1" />
             </Grid>
         </Border>
 

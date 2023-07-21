@@ -24,19 +24,10 @@ namespace DeLightWPF
             Left = screen?.Bounds.Left ?? Screen.PrimaryScreen?.Bounds.Left ?? 0;
         }
 
-        public void SetScreen(Screen screen)
-        {
-            WindowState = WindowState.Normal;
-            Top = screen.Bounds.Top;
-            Left = screen.Bounds.Left;
-            WindowState = WindowState.Maximized;
-        }
-
         public VideoWindow()
         {
             InitializeComponent();
         }
-
         protected override void OnClosed(EventArgs e)
         {
             Stop();
@@ -77,12 +68,6 @@ namespace DeLightWPF
                 FadeOutCurrentMediaElement(TimeSpan.FromSeconds(3));
             return foundVideo;
         }
-
-        public void SetVolume(double vol) {
-            _currentMediaElement?.Dispatcher.Invoke(() => {
-                _currentMediaElement.Volume = vol;
-            });
-        }
         private bool SetupNewMediaElement(Cue cue, TimeSpan fadeInDuration)
         {
             try
@@ -94,9 +79,8 @@ namespace DeLightWPF
                     IsMuted = false,
                     LoadedBehavior = MediaState.Manual,
                     UnloadedBehavior = MediaState.Manual,
-                    Opacity = 0
+                    Opacity = 0,
                 };
-
                 Container.Children.Add(_currentMediaElement);
                 _currentMediaElement.Play();
                 _mediaElements.Enqueue(_currentMediaElement);
@@ -185,5 +169,50 @@ namespace DeLightWPF
             storyboard.Children.Add(animation);
             storyboard.Begin();
         }
+
+        public void SoftPlay()
+        {
+            _currentMediaElement?.Play();
+        }
+        public void SoftStop()
+        {
+            _currentMediaElement?.Pause();
+        }
+        public void SetVolume(double vol)
+        {
+            _currentMediaElement?.Dispatcher.Invoke(() => {
+                _currentMediaElement.Volume = vol;
+            });
+        }
+        public void SetScreen(Screen screen)
+        {
+            WindowState = WindowState.Normal;
+            Top = screen.Bounds.Top;
+            Left = screen.Bounds.Left;
+            WindowState = WindowState.Maximized;
+        }
+        public void SetTime(TimeSpan time)
+        {
+              _currentMediaElement?.Dispatcher.Invoke(() =>
+              {
+                _currentMediaElement.Position = time;
+            });
+        }
+
+        public VideoStatus GetUpdates()
+        {
+            VideoStatus status = new VideoStatus();
+            status.Position = _currentMediaElement?.Position ?? TimeSpan.Zero;
+            if(_currentMediaElement != null && _currentMediaElement.NaturalDuration.HasTimeSpan)
+                status.Duration = _currentMediaElement.NaturalDuration.TimeSpan;
+            else
+            {
+                status.Duration = TimeSpan.Zero;
+                status.Error = true;//used to determine if we've really found the timespan or not yet.
+            }
+            return status;
+        }
+
+
     }
 }
