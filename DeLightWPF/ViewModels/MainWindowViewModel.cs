@@ -325,21 +325,6 @@ namespace DeLightWPF
             }
         }
 
-        public double FindRealCueDuration(double vidEnd, double lightEnd)
-        {
-            if (ActiveCue == null)
-                return 0;
-            if (ActiveCue.Duration == 0)
-            {
-                if (vidEnd > lightEnd)
-                    return vidEnd;
-                else
-                    return lightEnd;
-            }
-            else
-                return ActiveCue.Duration;
-        }
-
         //alright, here we go. Now comes the complicated ass timer shit....
         public void Timer_Tick(object? sender, EventArgs e)
         {

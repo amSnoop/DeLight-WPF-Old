@@ -11,6 +11,25 @@ namespace DeLightWPF.Utilities
 {
     public class CustomMediaElement : MediaElement
     {
+        /*
+         *  Some important states and what happens in those states
+         * 
+         *  Cue has just started OR has just looped and video is not set to loop or freeze itself:
+         *      Fade in video
+         *  Video ends and is set to loop:
+         *      Loop video
+         *  fadeOutTime reached and video is set to fade out:
+         *      Fade out video
+         * 
+         */
+
+
+
+        enum FadeState {
+            None,
+            FadingIn,
+            FadingOut
+        }
         public readonly Cue Cue;
 
         public event EventHandler? FadedIn;
@@ -19,8 +38,11 @@ namespace DeLightWPF.Utilities
 
         private DispatcherTimer timer = new();
 
-        public bool isFadingOut = false;
+        private double fadeTimeRemaining = 0;//updated whenever the slider is moved, and used to determine how much time is left in the next fade animation
 
+        private FadeState fadeState= FadeState.FadingIn; //used to determine if the video should currently be fading in or out once play is pressed
+
+        public bool isFadingOut = false;//used to prevent the fadeout animation from being called multiple times
         public int LoopCount { get; set; } = 0;
         public CustomMediaElement(Cue cue) : base()
         {
@@ -31,8 +53,6 @@ namespace DeLightWPF.Utilities
             IsMuted = false;
             Source = new Uri(cue.VidPath);
             Opacity = 0;
-            Play();
-            Stop();
             FadedOut += OnFadedOut;
             if (cue.VidEndAction == EndAction.Loop)
             {
@@ -46,11 +66,21 @@ namespace DeLightWPF.Utilities
             {
                 MediaEnded += FadeOutEventHandler;
             }
+            fadeTimeRemaining = cue.FadeInTime;
+        }
+
+        public void Load() {
+            Play();
+            Stop();
         }
 
         public void FadeOutEventHandler(object? sender, EventArgs e)
         {
             FadeOut();
+        }
+
+        public void PlayFromStart() {
+            FadeIn();
         }
 
         public void TimerTick(object? sender, EventArgs e)
@@ -62,28 +92,30 @@ namespace DeLightWPF.Utilities
             }
         }
 
-        public void TestFadeTiming()
+        public void UpdateFadeState()
         {
             //If video should be in the process of fading in(either hte first time the video is playing, or if it's not set to loop)
             if(Position.TotalSeconds < Cue.FadeInTime && (Cue.VidEndAction != EndAction.Loop || LoopCount == 1))
             {
                 Opacity = Position.TotalSeconds / Cue.FadeInTime;
-                FadeIn(Cue.FadeInTime - Position.TotalSeconds);
+                fadeState = FadeState.FadingIn;
+                fadeTimeRemaining = Position.TotalSeconds / Cue.FadeInTime;
             }
             //If video should be in the process of fading out
             else if (Cue.VidEndAction == EndAction.FadeBeforeEnd && Position > NaturalDuration.TimeSpan - TimeSpan.FromSeconds(Cue.FadeOutTime))
             {
                 Opacity = (NaturalDuration.TimeSpan - Position).TotalSeconds / Cue.FadeOutTime;
-                FadeOut(Cue.FadeOutTime - (NaturalDuration.TimeSpan - Position).TotalSeconds);
+                fadeState = FadeState.FadingOut;
             }
-            else if(Cue.VidEndAction == EndAction.FadeAfterEnd && Position > NaturalDuration.TimeSpan - TimeSpan.FromSeconds(Cue.FadeOutTime))
+            else if (Cue.VidEndAction == EndAction.FadeAfterEnd && Position > NaturalDuration.TimeSpan - TimeSpan.FromSeconds(Cue.FadeOutTime))
             {
                 Opacity = (NaturalDuration.TimeSpan - Position).TotalSeconds / Cue.FadeOutTime;
-                FadeOut()
+                fadeState = FadeState.FadingOut;
             }
             else
             {
-                Opacity = 0;
+                Opacity = 1;
+                fadeState = FadeState.None;
             }
         }
 
@@ -115,7 +147,7 @@ namespace DeLightWPF.Utilities
                 {
                     Position = timeStamp;
                 }
-                TestFadeTiming();
+                UpdateFadeState();
             }
         }
 
