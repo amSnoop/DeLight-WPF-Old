@@ -13,12 +13,17 @@ namespace DeLightWPF.Utilities
     public class Light : IRunnableVisualCue
     {
         public double Duration { get; set; } = Math.Round(new Random().NextDouble() * 10, 1);
-        public CueFile File { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double Opacity { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public CueFile File { get; set; }
 
-        public bool IsFadingOut => throw new NotImplementedException();
+        public Light(LightFile lf)
+        {
+            File = lf;
+        }
+        public double Opacity { get; set; }
 
-        double? IRunnableVisualCue.Duration => throw new NotImplementedException();
+        public bool IsFadingOut => false;
+
+        double? IRunnableVisualCue.Duration => Duration;
 
         public event EventHandler? FadedIn;
         public event EventHandler? FadedOut;
@@ -26,47 +31,47 @@ namespace DeLightWPF.Utilities
 
         public void ClearCurrentAnimations()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("ClearCurrentAnimations() called on Light");
         }
 
         public void FadeIn(double duration = -1)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("FadeIn() called on Light");
         }
 
         public void FadeOut(double duration = -1)
         {
-            throw new NotImplementedException();
+           Console.WriteLine("FadeOut() called on Light");
         }
 
         public Task LoadAsync()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public void Pause()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Pause() called on Light");
         }
 
         public void Play()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Play() called on Light");
         }
 
         public void SeekTo(double time)
         {
-            throw new NotImplementedException();
+           Console.WriteLine("SeekTo() called on Light");
         }
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Stop() called on Light");
         }
 
         public void Restart()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Restart() called on Light");
         }
     }
 
@@ -83,6 +88,7 @@ namespace DeLightWPF.Utilities
 
         public event EventHandler<RequestFadeOutEventArgs>? RequestedFadeToBlack;
         public Cue Cue { get; set; }
+        public VideoWindow VideoWindow { get; set; }
 
         //insert list of IRunnableVisualCues here
         public List<IRunnableVisualCue> VisualCues { get; set; } = new();
@@ -90,20 +96,19 @@ namespace DeLightWPF.Utilities
         public int LoopCount { get; set; } = 0;
         public int ElapsedTicks { get; set; } = 0;
 
-        public Light Light = new();
-
         public double RealDuration { get; set; } = 0;
 
 
-        public CueRunner(Cue cue)
+        public CueRunner(Cue cue, VideoWindow videoWindow)
         {
             Cue = cue;
+            VideoWindow = videoWindow;
             Timer = new()
             {
                 Interval = TimeSpan.FromMilliseconds(GlobalSettings.TickRate)
             };
             Timer.Tick += Timer_Tick;
-            Light l = new();
+            Light l = new(cue.LightScene);
             VisualCues.Add(l);
             DetermineFileEndingEvent(l);
             foreach (var sf in cue.ScreenFiles)
@@ -119,6 +124,7 @@ namespace DeLightWPF.Utilities
                 else
                     throw new Exception("Unknown VisualCue type, dumbass. wtf u doin boi");
                 DetermineFileEndingEvent(cme);
+                VideoWindow.Container.Children.Add(cme);
             }
         }
 
@@ -186,12 +192,19 @@ namespace DeLightWPF.Utilities
         {
             ElapsedTicks = 0;
             Timer.Stop();
+            VisualCues[0].FadedOut += CueDone;
+            foreach (var vc in VisualCues)
+                vc.FadeOut(Cue.FadeOutTime);
+        }
+
+        public void CueDone(object? sender, EventArgs e)
+        {
             foreach (var vc in VisualCues)
             {
-                vc.FadeOut(Cue.FadeOutTime);
-
+                vc.FadedOut -= CueDone;
+                if (vc is CustomMediaElement cme)
+                    VideoWindow.Container.Children.Remove(cme);
             }
-
         }
         public void Pause()
         {
@@ -207,6 +220,7 @@ namespace DeLightWPF.Utilities
         {
             Timer.Stop();
             ElapsedTicks = 0;
+            VisualCues[0].FadedOut += CueDone;
             foreach (var vc in VisualCues)
                 vc.Stop();
         }
@@ -217,7 +231,7 @@ namespace DeLightWPF.Utilities
             double seconds = tick * GlobalSettings.TickRate / 1000.0;
             foreach (var vc in VisualCues)
             {
-                Pause();
+                vc.Pause();
                 vc.ClearCurrentAnimations();
                 if (seconds < Cue.FadeInTime)
                     SeekedToFadeIn(vc, seconds, play);

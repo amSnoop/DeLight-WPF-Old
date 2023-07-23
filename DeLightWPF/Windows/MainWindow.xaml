@@ -161,7 +161,7 @@
                 <TextBlock Style="{StaticResource Title}">Cue List</TextBlock>
                 <Border VerticalAlignment="Stretch" Grid.Row="1">
                     <StackPanel>
-                        <ListBox x:Name="CueList" Grid.Row="1" ItemsSource="{Binding Show.Cues}" HorizontalAlignment="Stretch" Margin="0" Padding="0" SelectedItem="{Binding SelectedCue}" Background="Transparent" BorderThickness="1" BorderBrush="Transparent">
+                        <ListBox x:Name="CueList" Grid.Row="1" ItemsSource="{Binding ShowRunner.Show.Cues}" HorizontalAlignment="Stretch" Margin="0" Padding="0" SelectedItem="{Binding ShowRunner.SelectedCue}" Background="Transparent" BorderThickness="1" BorderBrush="Transparent">
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
                                     <Setter Property="Padding" Value="0" />
@@ -350,7 +350,7 @@
                 <TextBox Grid.Row="3" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Duration}" />
                 
                 <TextBlock Grid.Row="4" Text="Loop Cue:" VerticalAlignment="Center"/>
-                <CheckBox Grid.Row="4" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding Loop}"/>
+                <CheckBox Grid.Row="4" Grid.Column="1" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="False"/>
 
                 <TextBlock Grid.Row="5" Text="Volume:" VerticalAlignment="Center"/>
                 <Slider Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Maximum="1" Minimum="0" TickFrequency="0.01" Value="{Binding Volume}"/>

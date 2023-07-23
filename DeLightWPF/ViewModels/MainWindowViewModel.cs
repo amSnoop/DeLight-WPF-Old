@@ -39,9 +39,7 @@ namespace DeLightWPF
         [ObservableProperty]
         private CueViewModel activeCueViewModel = new();
         [ObservableProperty]
-        private Show show;
-        [ObservableProperty]
-        private bool showComplete = false;
+        private ShowRunner showRunner;
         [ObservableProperty]
         private int factor = 35;
         [ObservableProperty]
@@ -106,49 +104,12 @@ namespace DeLightWPF
 
         #region Non [ObservableProperty] Properties that send updates to the view
 
-        private Cue? selectedCue;
-
-        private Cue? activeCue;
-
-        public Cue? ActiveCue
-        {
-            get => activeCue;
-            set
-            {
-                if (activeCue is not null && activeCue != value)
-                {
-                    activeCue.PropertyChanged -= ActiveCue_PropertyChanged;
-                }
-                if (SetProperty(ref activeCue, value))
-                {
-                    if (activeCue is not null)
-                    {
-                        activeCue.PropertyChanged += ActiveCue_PropertyChanged;
-                    }
-                    // Notify the detail view model to update
-                    ActiveCueViewModel.CurrentCue = value;
-                };
-            }
-        }
-
-        public Cue? SelectedCue
-        {
-            get => selectedCue;
-            set
-            {
-                if (SetProperty(ref selectedCue, value))
-                {
-                    // Notify the detail view model to update
-                    PreviewCueViewModel.CurrentCue = value;
-                }
-            }
-        }
-
         #endregion
 
         public MainWindowViewModel(MainWindow window)
         {
-            show = Show.Load(GlobalSettings.Instance.LastShowPath);
+            ShowRunner = new(Show.Load(GlobalSettings.Instance.LastShowPath), VideoWindow);
+            ShowRunner.PropertyChanged += ActiveCueChanged;
             _window = window;
             _screenObjects = Screen.AllScreens.ToList();
             Monitors = _screenObjects.Select((s, i) => $"Monitor {i + 1}: {s.Bounds.Width}x{s.Bounds.Height}").ToList();
@@ -170,6 +131,18 @@ namespace DeLightWPF
         }
 
         #region Other Event Listeners
+
+        private void ActiveCueChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == nameof(ShowRunner.ActiveCue))
+            {
+                ActiveCueViewModel.CurrentCue = ShowRunner.ActiveCue;
+            }
+            if(e.PropertyName == nameof(ShowRunner.SelectedCue))
+            {
+                PreviewCueViewModel.CurrentCue = ShowRunner.SelectedCue;
+            }
+        }
 
         //Volume property of active cue changed, send it to video window.
         private void ActiveCue_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -221,31 +194,11 @@ namespace DeLightWPF
         public void PlayNextCue()
         {
             // The show is over and no cue is selected
-            if (ShowComplete && SelectedCue == null)
-                return;
-
-            // The show was over, but a new cue is manually selected
-            ShowComplete = ShowComplete && SelectedCue == null;
-
-            SelectedCue ??= Show.Cues.FirstOrDefault();
-
-            if (SelectedCue != null)
-            {
-                ActiveCue = SelectedCue;
-                int index = Show.Cues.IndexOf(SelectedCue);
-
-                SelectedCue = index < Show.Cues.Count - 1 ? Show.Cues[index + 1] : null;
-                ShowComplete = SelectedCue == null;
-
-                Play();
-            }
+            ShowRunner.Play();
         }
 
         public void Play()
         {
-            VideoWindow.Show();
-            _totalTicks = 0;
-            _timer.Start();
             _window.Activate();
         }
         public void Stop()
