@@ -117,14 +117,12 @@ namespace DeLightWPF
             {
                 if (activeCue is not null && activeCue != value)
                 {
-                    activeCue.IsActive = false;
                     activeCue.PropertyChanged -= ActiveCue_PropertyChanged;
                 }
                 if (SetProperty(ref activeCue, value))
                 {
                     if (activeCue is not null)
                     {
-                        activeCue.IsActive = true;
                         activeCue.PropertyChanged += ActiveCue_PropertyChanged;
                     }
                     // Notify the detail view model to update
@@ -169,7 +167,6 @@ namespace DeLightWPF
             _window.SettingsDisplay.DataContext = GlobalSettings.Instance;
             VideoWindow.GotFocus += VideoWindow_GotFocus;
             _timer.Interval = TimeSpan.FromMilliseconds(_timerInterval);
-            _timer.Tick += Timer_Tick;
         }
 
         #region Other Event Listeners
@@ -179,7 +176,6 @@ namespace DeLightWPF
         {
             if (e.PropertyName == nameof(Cue.Volume))
             {
-                VideoWindow.SetVolume(ActiveCue?.Volume ?? 0);
             }
         }
 
@@ -248,7 +244,6 @@ namespace DeLightWPF
         public void Play()
         {
             VideoWindow.Show();
-            VideoWindow.Play(ActiveCue);
             _totalTicks = 0;
             _timer.Start();
             _window.Activate();
@@ -262,87 +257,10 @@ namespace DeLightWPF
         public void SoftPlay()
         {
             _timer.Start();
-            VideoWindow.SoftPlay();
         }
         public void SoftStop()
         {
             _timer.Stop();
-            VideoWindow.SoftStop();
-        }
-
-        public void CalculateImportantTimes()
-        {
-
-            if (ActiveCue != null)
-            {
-                var vidEndTime = VideoWindow.GetUpdates().Duration.TotalSeconds;
-                //pick a random number for light end time between 0 and 10 seconds
-                double lightEndTime = Math.Round(new Random().NextDouble() * 10, 1);
-
-                ImportantTimes["vid"] = 0;
-                ImportantTimes["lights"] = 0;
-                var cueTime = FindRealCueDuration(vidEndTime, lightEndTime);
-                ActiveCueViewModel.RealDuration = cueTime;
-                if (vidEndTime < cueTime)
-                {
-                    if (ActiveCue.VidEndAction == EndAction.FadeAfterEnd || ActiveCue.VidEndAction == EndAction.Loop)
-                        ImportantTimes["vid"] = (int)(vidEndTime * _timerInterval);
-                    else if (ActiveCue.VidEndAction == EndAction.FadeBeforeEnd)
-                        ImportantTimes["vid"] = Math.Max((int)((vidEndTime - ActiveCue.FadeOutTime) * _timerInterval), 0);
-                    else
-                        ImportantTimes["vid"] = -1;
-                }
-                if (vidEndTime >= cueTime)
-                {
-                    if (ActiveCue.VidEndAction == EndAction.FadeBeforeEnd)
-                        ImportantTimes["vid"] = Math.Max((int)((cueTime - ActiveCue.FadeOutTime) * _timerInterval), 0);
-                    else if (ActiveCue.VidEndAction == EndAction.Freeze)
-                        ImportantTimes["vid"] = -1;
-                    else
-                        ImportantTimes["vid"] = (int)(cueTime * _timerInterval);
-                }
-
-
-                if (lightEndTime < cueTime)
-                {
-                    if (ActiveCue.LightEndAction == EndAction.FadeAfterEnd || ActiveCue.LightEndAction == EndAction.Loop)
-                        ImportantTimes["lights"] = (int)(lightEndTime * _timerInterval);
-                    else if (ActiveCue.LightEndAction == EndAction.FadeBeforeEnd)
-                        ImportantTimes["lights"] = Math.Max((int)((lightEndTime - ActiveCue.FadeOutTime) * _timerInterval), 0);
-                    else
-                        ImportantTimes["lights"] = -1;
-                }
-                if (lightEndTime >= cueTime)
-                {
-
-                    if (ActiveCue.LightEndAction == EndAction.FadeBeforeEnd)
-                        ImportantTimes["lights"] = Math.Max((int)((cueTime - ActiveCue.FadeOutTime) * _timerInterval), 0);
-                    else if (ActiveCue.LightEndAction == EndAction.Freeze)
-                        ImportantTimes["lights"] = -1;
-                    else
-                        ImportantTimes["lights"] = (int)(cueTime * _timerInterval);
-                }
-            }
-        }
-
-        //alright, here we go. Now comes the complicated ass timer shit....
-        public void Timer_Tick(object? sender, EventArgs e)
-        {
-            if (ActiveCue != null)
-            {
-                var status = VideoWindow.GetUpdates();
-                if (!status.Error && !foundDuration)
-                {
-                    CalculateImportantTimes();
-                    foundDuration = true;
-                }
-                //send ticks to light here
-
-
-                
-                _totalTicks++;
-            }
-
         }
 
 

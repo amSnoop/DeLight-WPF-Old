@@ -22,7 +22,7 @@ namespace DeLightWPF.Models
             {
                 if (Cues.Count > i)
                     Cues[i] = value ?? throw new ArgumentNullException(nameof(value));
-                else if(Cues.Count == i)
+                else if (Cues.Count == i)
                     Cues.Add(value ?? throw new ArgumentNullException(nameof(value)));
                 else
                     throw new Exception("Tried to set value at index " + i + "/" + Cues.Count);
@@ -49,7 +49,7 @@ namespace DeLightWPF.Models
             else
                 show = JsonSerializer.Deserialize<Show>(filepath);
 
-            if(show == null)
+            if (show == null)
                 Console.WriteLine("Could not load show from " + filepath);
             return show ?? LoadTestShow();
         }
@@ -66,32 +66,40 @@ namespace DeLightWPF.Models
             {
                 Number = "1",
                 Note = "This was a triumph",
-                VidPath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\cutscene example.mp4",
+                ScreenFiles = new() {
+                    new VideoFile() {
+                        FilePath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\cutscene example.mp4"
+                    }
+                },
                 FadeInTime = 3
             });
             show.Cues.Add(new Cue()
             {
                 Number = "2",
                 Note = "I'm leaving a note here:",
-                VidPath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\elite dont give a fuck.mp4",
+                ScreenFiles = new() {
+                    new VideoFile() {
+                        FilePath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\elite dont give a fuck.mp4"
+                    }
+                },
             });
             show.Cues.Add(new Cue()
             {
                 Number = "3",
                 Note = "Huge success!",
-                VidPath = "No",
+                ScreenFiles = new() { new VideoFile() { FilePath = "No" } },
             });
             show.Cues.Add(new Cue()
             {
                 Number = "4",
                 Note = "It's hard to overstate my satisfaction.",
-                VidPath = "C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg",
+                ScreenFiles = new() { new ImageFile() { FilePath = "C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg" } },
             });
             show.Cues.Add(new Cue()
             {
                 Number = "5",
                 Note = "Aperture Science",
-                VidPath = "\"C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg\"",
+                ScreenFiles = new() { new ImageFile() { FilePath = "\"C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg\"" } },
             });
             show.Cues.Add(new Cue()
             {
