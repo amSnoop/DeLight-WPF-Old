@@ -7,9 +7,11 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 
-namespace DeLightWPF.Utilities {
+namespace DeLightWPF.Utilities
+{
 
-    public class Light : IRunnableVisualCue{
+    public class Light : IRunnableVisualCue
+    {
         public double Duration { get; set; } = Math.Round(new Random().NextDouble() * 10, 1);
         public CueFile File { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public double Opacity { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -61,6 +63,11 @@ namespace DeLightWPF.Utilities {
         {
             throw new NotImplementedException();
         }
+
+        public void Restart()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class RequestFadeOutEventArgs : EventArgs
@@ -87,10 +94,9 @@ namespace DeLightWPF.Utilities {
 
         public double RealDuration { get; set; } = 0;
 
-        private TaskCompletionSource<bool> tcs = new();
 
-
-        public CueRunner(Cue cue) {
+        public CueRunner(Cue cue)
+        {
             Cue = cue;
             Timer = new()
             {
@@ -100,15 +106,15 @@ namespace DeLightWPF.Utilities {
             Light l = new();
             VisualCues.Add(l);
             DetermineFileEndingEvent(l);
-            foreach(var sf in cue.ScreenFiles)
+            foreach (var sf in cue.ScreenFiles)
             {
                 //TODO: Add support for other types of cues
                 CustomMediaElement cme;
                 if (sf is VideoFile)
                     cme = new(sf);
-                else if(sf is GifFile)
+                else if (sf is GifFile)
                     cme = new(sf);
-                else if(sf is ImageFile)
+                else if (sf is ImageFile)
                     cme = new(sf);
                 else
                     throw new Exception("Unknown VisualCue type, dumbass. wtf u doin boi");
@@ -119,55 +125,50 @@ namespace DeLightWPF.Utilities {
         private void DetermineFileEndingEvent(IRunnableVisualCue vc)
         {
             if (vc.File.EndAction == EndAction.FadeAfterEnd)
-            {
                 vc.PlaybackEnded += (s, e) => vc.FadeOut();
-            }
             else if (vc.File.EndAction == EndAction.Loop)
-            {
                 vc.PlaybackEnded += (s, e) => vc.Restart();
-            }
-            else if(vc.File.EndAction == EndAction.FadeBeforeEnd)
-            {
+            else if (vc.File.EndAction == EndAction.FadeBeforeEnd)
                 Timer.Tick += FileEndWatch;
-            }
 
         }
-
         private void FileEndWatch(object? sender, EventArgs e)
         {
-            foreach(var vc in VisualCues)
-            {
-                if(!vc.IsFadingOut && vc.Duration - (ElapsedTicks * GlobalSettings.TickRate) <= vc.File.FadeOutDuration)
-                {
+            foreach (var vc in VisualCues)
+                if (!vc.IsFadingOut && vc.Duration - (ElapsedTicks * GlobalSettings.TickRate) <= vc.File.FadeOutDuration)
                     vc.FadeOut();
-                }
-            }
         }
 
-        public void FindRealCueDuration() {
-
-            if (Cue.Duration == 0) {
+        public void FindRealCueDuration()
+        {
+            if (Cue.Duration == 0)
                 foreach (var vc in VisualCues)
-                {
                     if ((vc.Duration ?? 0) > RealDuration)
-                    {
                         RealDuration = vc.Duration ?? 0;
-                    }
-                }
-            }
-            else
-                RealDuration = Cue.Duration;
+                    else
+                        RealDuration = Cue.Duration;
         }
 
-        public void Timer_Tick(object? s, EventArgs e) {
-              ElapsedTicks++;
-            if (ElapsedTicks >= RealDuration * 1000/GlobalSettings.TickRate) {
-                End();
+        public void Timer_Tick(object? s, EventArgs e)
+        {
+            ElapsedTicks++;
+            if (ElapsedTicks >= RealDuration * 1000 / GlobalSettings.TickRate)
+            {
+                if (Cue.CueEndAction == EndAction.Loop)
+                {
+                    LoopCount++;
+                    Play();
+                }
+                else if (Cue.CueEndAction == EndAction.FadeAfterEnd)
+                    End();
             }
+            else if (ElapsedTicks * GlobalSettings.TickRate >= RealDuration - Cue.FadeOutTime && Cue.CueEndAction == EndAction.FadeBeforeEnd)
+                End();
         }
 
         //Plays from the beginning of the cue
-        public async void Play() {
+        public async void Play()
+        {
 
             //wait for media to open before attempting to find its duration
             var loadTasks = VisualCues.Select(vc => vc.LoadAsync()).ToList();
@@ -178,15 +179,19 @@ namespace DeLightWPF.Utilities {
             //That comment brought to you by GitHub Copilot - Surprisingly funny lmao
             FindRealCueDuration();
             SeekTo(0, true);
-            Timer.Start();
             ElapsedTicks = 0;
+            Timer.Start();
         }
         public void End()
         {
+            ElapsedTicks = 0;
+            Timer.Stop();
             foreach (var vc in VisualCues)
             {
                 vc.FadeOut(Cue.FadeOutTime);
+
             }
+
         }
         public void Pause()
         {
@@ -200,7 +205,10 @@ namespace DeLightWPF.Utilities {
         }
         public void Stop()
         {
-
+            Timer.Stop();
+            ElapsedTicks = 0;
+            foreach (var vc in VisualCues)
+                vc.Stop();
         }
 
         public void SeekTo(int tick, bool play = false)
@@ -212,21 +220,13 @@ namespace DeLightWPF.Utilities {
                 Pause();
                 vc.ClearCurrentAnimations();
                 if (seconds < Cue.FadeInTime)
-                {
                     SeekedToFadeIn(vc, seconds, play);
-                }
                 else if (seconds > vc.Duration)
-                {
                     SeekedToAfterEnd(vc, seconds, play);
-                }
                 else if (vc.File.EndAction == EndAction.FadeBeforeEnd && (vc.Duration - seconds) < Cue.FadeOutTime)
-                {
                     SeekedToFadeBeforeEnd(vc, seconds, play);
-                }
                 else
-                {
                     SeekedToNormalPlayback(vc, seconds, play);
-                }
             }
 
         }
@@ -263,9 +263,7 @@ namespace DeLightWPF.Utilities {
             {
                 vc.Opacity = OPACITY_FULL;
                 while (time > vc.Duration)
-                {
-                    time -= vc.Duration ?? 1;// not 0 so that it wont get in an infinite loop in case of a video with no duration
-                }
+                    time -= vc.Duration ?? 1;
                 vc.SeekTo(time);
                 if (play)
                     vc.Play();

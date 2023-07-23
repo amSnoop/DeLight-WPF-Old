@@ -47,7 +47,12 @@ namespace DeLightWPF.Utilities
         {
             PlaybackEnded?.Invoke(this, EventArgs.Empty);
         }
-
+        public void Restart()
+        {
+            Stop();
+            Position = TimeSpan.Zero;
+            Play();
+        }
         public void OnFadedOut(object? s, EventArgs e)
         {
             Stop();

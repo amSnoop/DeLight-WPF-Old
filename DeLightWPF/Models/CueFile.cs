@@ -31,6 +31,7 @@ namespace DeLightWPF.Models
         protected static readonly List<string> imageFileTypes = new() { ".jpg", ".jpeg", ".png", ".bmp" };
         protected static readonly List<string> gifFileTypes = new() { ".gif" };
         protected static readonly List<string> lightFileTypes = new() { ".scex" };
+        protected static readonly List<string> audioFileTypes = new() { ".mp3", ".wav", ".m4a" };
 
         public CueFile()
         {
@@ -49,6 +50,19 @@ namespace DeLightWPF.Models
             return false;
         }
     }
+
+    //TODO: Implement
+    public class AudioFile : CueFile
+    {
+        public double Volume { get; set; }
+        public override bool HasValidFile => IsValidFile(audioFileTypes);
+
+        public AudioFile()
+        {
+            Volume = 1;
+        }
+    }
+
 
     public class ScreenFile : CueFile
     {

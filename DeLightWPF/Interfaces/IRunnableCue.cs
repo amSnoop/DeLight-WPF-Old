@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DeLightWPF.Models
 {
-    public interface IRunnableVisualCue
+    public interface IRunnableVisualCue 
     {
         CueFile File { get; set; }
         double Opacity { get; set; }
@@ -22,7 +23,7 @@ namespace DeLightWPF.Models
         public void SeekTo(double time);
         public void FadeIn(double duration = -1);
         public void FadeOut(double duration = -1);
-
+        public void Restart();
         public void ClearCurrentAnimations();
 
         public Task LoadAsync();
