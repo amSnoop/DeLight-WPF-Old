@@ -33,8 +33,6 @@ namespace DeLightWPF
         [ObservableProperty]
         private List<string> monitors = new();
         [ObservableProperty]
-        private double masterVol = 2.5;
-        [ObservableProperty]
         private CueViewModel previewCueViewModel = new();
         [ObservableProperty]
         private CueViewModel activeCueViewModel = new();
@@ -189,6 +187,7 @@ namespace DeLightWPF
         public void HideVideoPlayback()
         {
             VideoWindow.Hide();
+            ShowRunner.Stop();
         }
 
         public void PlayNextCue()
@@ -203,6 +202,7 @@ namespace DeLightWPF
         }
         public void Stop()
         {
+            ShowRunner.Stop();
             VideoWindow.Stop();
             _timer.Stop();
             _window.Activate();

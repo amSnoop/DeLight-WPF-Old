@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DeLightWPF.Models.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,39 +68,41 @@ namespace DeLightWPF.Models
                 Number = "1",
                 Note = "This was a triumph",
                 ScreenFiles = new() {
-                    new VideoFile() {
+                    {1, new VideoFile() {
                         FilePath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\cutscene example.mp4"
-                    }
+                    } }
                 },
-                FadeInTime = 3
+                CueEndAction = EndAction.FadeBeforeEnd
+                
             });
             show.Cues.Add(new Cue()
             {
                 Number = "2",
                 Note = "I'm leaving a note here:",
                 ScreenFiles = new() {
-                    new VideoFile() {
-                        FilePath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\elite dont give a fuck.mp4"
-                    }
+                    {1,  new VideoFile() {
+                        FilePath = "C:\\Users\\Snoopy\\Videos\\Halo  The Master Chief Collection\\elite dont give a fuck.mp4",
+                    } }
                 },
+                CueEndAction = EndAction.Loop
             });
             show.Cues.Add(new Cue()
             {
                 Number = "3",
                 Note = "Huge success!",
-                ScreenFiles = new() { new VideoFile() { FilePath = "No" } },
+                ScreenFiles = new() { {1, new VideoFile() { FilePath = "No" } } },
             });
             show.Cues.Add(new Cue()
             {
                 Number = "4",
                 Note = "It's hard to overstate my satisfaction.",
-                ScreenFiles = new() { new ImageFile() { FilePath = "C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg" } },
+                ScreenFiles = new() { { 1, new ImageFile() { FilePath = "C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg" } } },
             });
             show.Cues.Add(new Cue()
             {
                 Number = "5",
                 Note = "Aperture Science",
-                ScreenFiles = new() { new ImageFile() { FilePath = "\"C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg\"" } },
+                ScreenFiles = new() { { 1, new ImageFile() { FilePath = "\"C:\\Users\\Snoopy\\Pictures\\4k-space-wallpaper-1.jpg\"" } } },
             });
             show.Cues.Add(new Cue()
             {
@@ -110,6 +113,7 @@ namespace DeLightWPF.Models
             {
                 Number = "7",
                 Note = "For the good of all of us,",
+                Disabled = true
             });
             show.Cues.Add(new Cue()
             {

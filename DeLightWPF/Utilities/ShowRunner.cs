@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DeLightWPF.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,11 +25,32 @@ namespace DeLightWPF.Utilities
         {
             Show = show;
             VideoWindow = videoWindow;
+            Prepare();
         }
+
+        public void Prepare()
+        {
+            foreach (Cue cue in Show.Cues)
+            {
+                cue.Ready = true;
+                if(!cue.LightScene.HasValidFile)
+                    cue.Ready = false;
+                foreach (ScreenFile screenFile in cue.ScreenFiles)
+                    if (!screenFile.HasValidFile)
+                        cue.Ready = false;  
+            }
+        }
+
         public void Play()
         {
             if (ShowComplete && SelectedCue == null)
                 return;
+            if (ActiveCue != null)
+            {
+                ActiveCue.IsActive = false;
+                foreach (CueRunner cueRunner in ActiveCues)
+                    cueRunner.End();
+            }
 
             // The show was over, but a new cue is manually selected
             ShowComplete = ShowComplete && SelectedCue == null;
@@ -47,9 +69,20 @@ namespace DeLightWPF.Utilities
                 CueRunner cueRunner = new(ActiveCue, VideoWindow);
                 ActiveCues.Add(cueRunner);
                 cueRunner.Play();
+                cueRunner.FadedOut += CueFadedOut;
+                ActiveCue.IsActive = true;
             }
         }
-
+        public void CueFadedOut(object? sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                CueRunner cueRunner = (CueRunner)sender;
+                cueRunner.FadedOut -= CueFadedOut;
+                ActiveCues.Remove(cueRunner);
+                cueRunner.Cue.IsActive = false;
+            }
+        }
         public void Stop()
         {
             foreach (CueRunner cueRunner in ActiveCues)

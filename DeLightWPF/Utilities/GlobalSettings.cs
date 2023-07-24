@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Permissions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace DeLightWPF.Utilities
@@ -24,6 +25,9 @@ namespace DeLightWPF.Utilities
         private double lastVideoScreenLeft { get; set; }
         public int LastScreenTop { get; set; }
         public int LastScreenLeft { get; set; }
+
+        public WindowState WindowState { get; set; } = WindowState.Normal;
+
         [JsonIgnore]
         public Screen? Screen { get; set; }
 

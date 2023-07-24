@@ -24,6 +24,7 @@ namespace DeLightWPF
 
         public MainWindow()
         {
+            WindowState = WindowState.Normal;
             Top = GlobalSettings.Instance.LastScreenTop;
             Left = GlobalSettings.Instance.LastScreenLeft;
             InitializeComponent();
@@ -34,8 +35,13 @@ namespace DeLightWPF
             PreviewKeyDown += OnKeyDown;
             SizeChanged += MainWindow_OnSizeChanged;
             MouseDown += MainWindow_MouseDown;
+            Loaded += MainWindow_Loaded;
         }
 
+        public void MainWindow_Loaded(object? sender, EventArgs e)
+        {
+            WindowState = GlobalSettings.Instance.WindowState;
+        }
         public void MainWindow_MouseDown(object sender, MouseButtonEventArgs e) {
             Keyboard.ClearFocus();
             Activate();
@@ -62,6 +68,7 @@ namespace DeLightWPF
         protected override void OnClosed(EventArgs e) {
             GlobalSettings.Instance.LastScreenTop = (int)Top;
             GlobalSettings.Instance.LastScreenLeft = (int)Left;
+            GlobalSettings.Instance.WindowState = WindowState;
             base.OnClosed(e);
             (DataContext as MainWindowViewModel)?.HideVideoPlayback();
 

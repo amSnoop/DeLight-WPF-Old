@@ -1,0 +1,7 @@
+﻿namespace DeLightWPF.Models.Files
+{
+    public partial class ScreenFile : CueFile, IVisualFile
+    {
+        //Eventually this will probably have information about what screen it should be displayed on, but that's a bit in the future...
+    }
+}

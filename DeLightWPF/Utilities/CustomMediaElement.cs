@@ -8,7 +8,7 @@ using System.Windows.Media.Animation;
 
 namespace DeLightWPF.Utilities
 {
-    public class CustomMediaElement : MediaElement, IRunnableVisualCue
+    public abstract class CustomMediaElement : MediaElement, IRunnableVisualCue
     {
 
         private TaskCompletionSource<bool> tcs = new();
@@ -21,19 +21,17 @@ namespace DeLightWPF.Utilities
         CueFile IRunnableVisualCue.File
         {
             get { return File; }
-            set { File = value as VideoFile ?? throw (new InvalidCastException("CustomMediaElement did not receive a VideoFile file type. (Path=" + value.FilePath)); }
+            set { File = value as ScreenFile ?? throw (new InvalidCastException("CustomMediaElement did not receive a VideoFile file type. (Path=" + value.FilePath)); }
         }
-        public double? Duration { get => NaturalDuration.HasTimeSpan ? NaturalDuration.TimeSpan.TotalSeconds : null; }
+        public virtual double? Duration { get => NaturalDuration.HasTimeSpan ? NaturalDuration.TimeSpan.TotalSeconds : null; }
         public bool IsFadingOut { get; private set; } = false; //Used to prevent the fade out from being called multiple times
 
-
+        private bool IsFadedOut { get => Opacity == 0; }
         public CustomMediaElement(ScreenFile file) : base()
         {
             LoadedBehavior = MediaState.Manual;
             UnloadedBehavior = MediaState.Manual;
             File = file;
-            if(file is VideoFile vf)
-                Volume = vf.Volume;
             IsMuted = false;
             Source = new Uri(file.FilePath);
             Opacity = 0;
@@ -41,17 +39,12 @@ namespace DeLightWPF.Utilities
             MediaOpened += (s, e) => tcs.SetResult(true);
         }
 
+
         #region Event Handlers for Video End Actions
 
         public void OnMediaEnded(object? sender, EventArgs e)
         {
             PlaybackEnded?.Invoke(this, EventArgs.Empty);
-        }
-        public void Restart()
-        {
-            Stop();
-            Position = TimeSpan.Zero;
-            Play();
         }
         public void OnFadedOut(object? s, EventArgs e)
         {
@@ -63,6 +56,14 @@ namespace DeLightWPF.Utilities
 
 
         #region Public Methods
+        public virtual void Restart() { }
+        public virtual void SeekTo(double time) { }
+
+        public new virtual void Play() { base.Play(); }
+        public new virtual void Pause() { base.Pause(); }
+        public new virtual void Stop() { base.Stop(); }
+
+
         //Loads the cue so that it has a NaturalDuration TimeSpan TODO: Disallow playing until loaded.
         public async Task LoadAsync()
         {
@@ -80,17 +81,16 @@ namespace DeLightWPF.Utilities
 
         public void FadeOut(double duration = -1)
         {
+            if(!IsFadedOut && !IsFadingOut)
+                Play();
+
             IsFadingOut = true;
-            Play();
             DoubleAnimation fadeOut = new(0, TimeSpan.FromSeconds(duration == -1 ? File.FadeOutDuration : duration));
             fadeOut.Completed += (s, e) => FadedOut?.Invoke(this, EventArgs.Empty);
             BeginAnimation(fadeOut);
         }
 
-        public void SeekTo(double time)
-        {
-            Position = TimeSpan.FromSeconds(time);
-        }
+        
 
         public void ClearCurrentAnimations()
         {
