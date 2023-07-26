@@ -12,19 +12,18 @@ namespace DeLightWPF.Utilities
 
     public class Light : IRunnableVisualCue
     {
-        public double Duration { get; set; } =/* Math.Round(new Random().NextDouble() * 10, 1)*/ 1;
-        public CueFile File { get; set; }
+        public double? Duration =>/* Math.Round(new Random().NextDouble() * 10, 1)*/ 1;
+        public LightFile File { get; }
 
-        public Light(ILightFile lf)
+        CueFile IRunnableVisualCue.File => File;
+
+        public Light(LightFile lf)
         {
             File = lf;
         }
         public double Opacity { get; set; }
 
         public bool IsFadingOut => false;
-
-        double? IRunnableVisualCue.Duration => Duration;
-
 
         public event EventHandler? FadedIn;
         public event EventHandler? FadedOut;
@@ -81,7 +80,7 @@ namespace DeLightWPF.Utilities
         private readonly double OPACITY_FULL = 1;//chatGPT doesn't like magic numbers, and GPT is my code reviewer, so here we are
         private readonly double OPACITY_NONE = 0;
 
-        private int fadeInCount = 0, fadeOutCount = 0;
+        private int fadeInCount = 0, fadeOutCount = 0; 
 
         public event EventHandler? FadedIn, FadedOut;
         public Cue Cue { get; set; }
@@ -105,7 +104,7 @@ namespace DeLightWPF.Utilities
             Light l = new(cue.LightScene);
             VisualCues.Add(l);
             DetermineFileEndingEvent(l);
-            foreach (var sf in cue.ScreenFiles)
+            foreach (var sf in cue.ScreenFiles.Values)
             {
                 //TODO: Add support for other types of cues
                 CustomMediaElement cme;

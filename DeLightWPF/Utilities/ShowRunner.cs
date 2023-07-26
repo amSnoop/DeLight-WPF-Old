@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DeLightWPF.Models;
+using DeLightWPF.Models.Files;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,11 +34,11 @@ namespace DeLightWPF.Utilities
             foreach (Cue cue in Show.Cues)
             {
                 cue.Ready = true;
-                if(!cue.LightScene.HasValidFile)
+                if (cue.LightScene is BlackoutLightFile blf && blf.Reason != BlackoutReason.EmptyPath)
                     cue.Ready = false;
-                foreach (ScreenFile screenFile in cue.ScreenFiles)
-                    if (!screenFile.HasValidFile)
-                        cue.Ready = false;  
+                foreach (ScreenFile screenFile in cue.ScreenFiles.Values)
+                    if (screenFile is BlackoutScreenFile bsf && bsf.Reason != BlackoutReason.EmptyPath)
+                        cue.Ready = false;
             }
         }
 

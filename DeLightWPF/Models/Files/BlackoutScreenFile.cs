@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace DeLightWPF.Models.Files
 {
     //used if the filepath is not valid
-    public partial class BlackoutFile : CueFile, IVisualFile, ILightFile
+    public partial class BlackoutScreenFile : ScreenFile
     {
-        public string Reason { get; set; }
-        public BlackoutFile(string reason)
+        public BlackoutReason Reason { get; set; }
+        public BlackoutScreenFile(BlackoutReason reason)
         {
             Reason = reason;
         }

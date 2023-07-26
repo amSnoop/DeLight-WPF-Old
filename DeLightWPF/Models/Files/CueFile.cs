@@ -18,6 +18,15 @@ namespace DeLightWPF.Models.Files
      * Gif and Image file are different because MediaElement is needed for gifs, but not for images, but they can't set a gif duration. Therefore special behaviors are needed.
      * 
      */
+
+    public enum BlackoutReason
+    {
+        EmptyPath,
+        InvalidPath,
+        InvalidFileType,
+        Other
+    }
+
     public abstract partial class CueFile : ObservableObject
     {
         [ObservableProperty]

@@ -3,48 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DeLightWPF" d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
+        xmlns:local="clr-namespace:DeLightWPF"
+        xmlns:windows="clr-namespace:DeLightWPF.Windows"
+        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="DeLight WPF Version" 
         Height="720" 
         Width="1080"
         MinHeight="720"
-        MinWidth="1080"
+        MinWidth="1280"
         Background="#000"
         WindowStyle="SingleBorderWindow"
         BorderBrush="White"
         BorderThickness="1"
         ResizeMode="CanResizeWithGrip">
-    <Window.Resources>
-        <SolidColorBrush x:Key="BackgroundBrush" Color="Black" />
-        <SolidColorBrush x:Key="ForegroundBrush" Color="White" />
-        <SolidColorBrush x:Key="TextBaseBrush" Color="White" />
-        <SolidColorBrush x:Key="TextAltBrush" Color="Wheat" />
-        <SolidColorBrush x:Key="AccentBrush" Color="#45a4d3" />
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="FontSize" Value="{Binding Path=DataContext.BodyFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-            <Setter Property="Background" Value="#444" />
-            <Setter Property="Foreground" Value="{StaticResource TextBaseBrush}" />
-        </Style>
-        <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="FontSize" Value="{Binding Path=DataContext.BodyFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-            <Setter Property="Foreground" Value="{StaticResource TextBaseBrush}" />
-        </Style>
-        <Style x:Key="listItem">
-            <Setter Property="Control.Height" Value="{Binding Path=DataContext.RowHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-        </Style>
-        <Style x:Key="Subtitle">
-            <Setter Property="Control.FontSize" Value="{Binding Path=DataContext.SubtitleFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-            <Setter Property="Control.Foreground" Value="{StaticResource TextBaseBrush}" />
-            <Setter Property="Control.HorizontalAlignment" Value="Center" />
-        </Style>
-        <Style x:Key="Title">
-            <Setter Property="Control.FontSize" Value="{Binding Path=DataContext.TitleFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-            <Setter Property="Control.Foreground" Value="{StaticResource TextBaseBrush}" />
-            <Setter Property="Control.HorizontalAlignment" Value="Center" />
-        </Style>
-
-    </Window.Resources>
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -56,15 +28,31 @@
             <ColumnDefinition Width="10*" MinWidth="300"/>
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="30*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="1.5*" />
             <ColumnDefinition Width="22*" MinWidth="350"/>
             <ColumnDefinition Width="1.5*" MinWidth="20" />
         </Grid.ColumnDefinitions>
 
-
-
+        <!-- Cue Editing Window -->
+        <windows:CueEditorPopup Grid.ColumnSpan="5" Panel.ZIndex="1" x:Name="CueEditorWindow" Visibility="Hidden">
+            
+        </windows:CueEditorPopup>
         <!-- Previewer / Cue Settings window -->
         <Border Grid.Row="0" Grid.Column="3" Margin="0,20">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=CueEditorWindow, Path=IsVisible}" Value="True">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <BlurEffect Radius="15"/>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -133,7 +121,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding CurrentCue.ScreenFiles[0].FilePath}" />
+                            <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding CurrentCue.ScreenFiles.Values[0].FilePath}" />
                             <Button Grid.Column="1" Content=" . . . " VerticalAlignment="Center" FontSize="{Binding Path=DataContext.BodyFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                         </Grid>
 
@@ -152,7 +140,7 @@
         </Border>
 
         <!-- Cue List Window -->
-        <Border Grid.Column="5" Grid.Row="0" Margin="0,20,0,20">
+        <Border Grid.Column="6" Grid.Row="0" Margin="0,20,0,20">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -295,6 +283,19 @@
 
         <!-- Settings Window -->
         <Grid Grid.Column="1" Margin="0,20">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=CueEditorWindow, Path=IsVisible}" Value="True">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <BlurEffect Radius="15"/>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" MinHeight="140"/>
@@ -404,7 +405,7 @@
                 <ComboBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"  SelectedValue="{Binding LightScene.EndAction, Mode=TwoWay}" ItemsSource="{Binding DataContext.EndActionStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
 
                 <TextBlock Grid.Row="8" Text="Video End Action:" VerticalAlignment="Center"/>
-                <ComboBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"  SelectedValue="{Binding ScreenFiles[0].EndAction, Mode=TwoWay}" ItemsSource="{Binding DataContext.EndActionStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
+                <ComboBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"  SelectedValue="{Binding ScreenFiles.Values[0].EndAction, Mode=TwoWay}" ItemsSource="{Binding DataContext.EndActionStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
             </Grid>
         </Grid>
     </Grid>

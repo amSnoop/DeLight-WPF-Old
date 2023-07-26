@@ -25,6 +25,7 @@ namespace DeLightWPF.Utilities
         private double lastVideoScreenLeft { get; set; }
         public int LastScreenTop { get; set; }
         public int LastScreenLeft { get; set; }
+        public int NumProjectors { get; set; } = 1;
 
         public WindowState WindowState { get; set; } = WindowState.Normal;
 
@@ -63,7 +64,15 @@ namespace DeLightWPF.Utilities
 
         private static void Deserialize(string json)
         {
-            instance = JsonSerializer.Deserialize<GlobalSettings>(json);
+            try
+            {
+                instance = JsonSerializer.Deserialize<GlobalSettings>(json);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
             instance ??= new();
             instance.Screen = Screen.AllScreens.Where(s => s.Bounds.Top == instance.lastVideoScreenTop && s.Bounds.Left == instance.lastVideoScreenLeft).FirstOrDefault() ?? Screen.PrimaryScreen;
 

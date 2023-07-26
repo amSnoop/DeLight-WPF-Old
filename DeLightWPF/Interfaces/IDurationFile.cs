@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeLightWPF.Models.Files
+namespace DeLightWPF.Interfaces
 {
-    public interface IVisualFile
+    public interface IDurationFile
     {
+        double Duration { get; set; }
     }
 }

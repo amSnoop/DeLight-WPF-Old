@@ -52,9 +52,9 @@ namespace DeLightWPF.Models
         [ObservableProperty]
         private EndAction cueEndAction;
         [ObservableProperty]
-        private Dictionary<int, IVisualFile> screenFiles;
+        private Dictionary<int, ScreenFile> screenFiles;
         [ObservableProperty]
-        private ILightFile lightScene;
+        private LightFile lightScene;
         [ObservableProperty]
         private bool ready;
         [ObservableProperty]
@@ -73,12 +73,12 @@ namespace DeLightWPF.Models
             FadeType = FadeType.FadeOver;
             ScreenFiles = new()
             {
-                { 1, new BlackoutFile("None") }
+                { 1, new BlackoutScreenFile(BlackoutReason.EmptyPath) }
             };
-            LightScene = new BlackoutFile("None");
+            LightScene = new BlackoutLightFile(BlackoutReason.EmptyPath);
         }
 
-        public bool SetScreenFile(int screenNumber, IVisualFile file)
+        public bool SetScreenFile(int screenNumber, ScreenFile file)
         {
             if(screenNumber > 0)
             {
@@ -88,24 +88,24 @@ namespace DeLightWPF.Models
             return false;
         }
 
-        public bool ChangeFileScreen(int screenNumber, IVisualFile file)
+        public bool ChangeFileScreen(int screenNumber, ScreenFile file)
         {
             int curScreen = ScreenFiles.FirstOrDefault(x => x.Value == file).Key;
             if (curScreen != 0 && screenNumber > 0)
             {
-                ScreenFiles[curScreen] = new BlackoutFile("None");
+                ScreenFiles[curScreen] = new BlackoutScreenFile(BlackoutReason.EmptyPath);
                 ScreenFiles[screenNumber] = file;
                 return true;
             }
             return false;
         }
 
-        public bool SwapFileScreen(int screenNumber, IVisualFile file)
+        public bool SwapFileScreen(int screenNumber, ScreenFile file)
         {
             int curScreen = ScreenFiles.FirstOrDefault(x => x.Value == file).Key;
             if (curScreen != 0 && screenNumber > 0)
             {
-                IVisualFile temp = ScreenFiles[screenNumber];
+                ScreenFile temp = ScreenFiles[screenNumber];
                 ScreenFiles[screenNumber] = file;
                 ScreenFiles[curScreen] = temp;
                 return true;

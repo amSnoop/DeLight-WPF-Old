@@ -1,16 +1,12 @@
 ﻿using DeLightWPF.Models.Files;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace DeLightWPF.Models
 {
-    public interface IRunnableVisualCue 
+    public interface IRunnableVisualCue
     {
-        CueFile File { get; set; }
+        CueFile File { get; }
         double Opacity { get; set; }
 
         bool IsFadingOut { get; }

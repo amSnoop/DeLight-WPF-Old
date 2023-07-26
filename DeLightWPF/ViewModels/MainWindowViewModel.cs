@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -39,13 +40,11 @@ namespace DeLightWPF
         [ObservableProperty]
         private ShowRunner showRunner;
         [ObservableProperty]
-        private int factor = 35;
+        private double subTitleFontFactor = 1.2;
         [ObservableProperty]
-        private int factor1 = 40;
+        private double titleFontFactor = 3;
         [ObservableProperty]
-        private int factor2 = 35;
-        [ObservableProperty]
-        private int factor3 = 40;
+        private double cueFontFactor = 1.2;
 
         #endregion
 
@@ -71,23 +70,23 @@ namespace DeLightWPF
 
         #region Font Size Properties
 
-        public double TitleFontSize
+        public double BodyFontSize
         {
             get
             {
-                double baseFontSize = 30;
-                double scaleFactor = 1 + Math.Log(_window.ActualWidth / 1000.0);
-                double maxFontSize = 50;
+                double baseFontSize = 12;
+                double scaleFactor = 1 + Math.Log(_window.ActualHeight / 720.0);
+                double maxFontSize = 25;
                 double fontSize = Math.Max(Math.Min(baseFontSize * scaleFactor, maxFontSize), baseFontSize);
-
+                Console.WriteLine($"Font size: {fontSize}");
                 return fontSize;
             }
         }
 
-        public double CueFontSize => TitleFontSize * Factor3 / 100;
-        public double SubtitleFontSize => TitleFontSize * Factor1 / 100;
+        public double CueFontSize => BodyFontSize * CueFontFactor;
+        public double SubtitleFontSize => BodyFontSize * SubTitleFontFactor;
 
-        public double BodyFontSize => TitleFontSize * Factor2 / 100;
+        public double TitleFontSize => BodyFontSize * TitleFontFactor;
 
         public void UpdateWindowSize()
         {
@@ -126,6 +125,28 @@ namespace DeLightWPF
             _window.SettingsDisplay.DataContext = GlobalSettings.Instance;
             VideoWindow.GotFocus += VideoWindow_GotFocus;
             _timer.Interval = TimeSpan.FromMilliseconds(_timerInterval);
+            _window.CueList.SelectionChanged += CueList_SelectionChanged;
+        }
+
+        private void CueList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            bool newItem = true;
+            if(_window.CueEditorWindow.DataContext is CueEditorViewModel vm && !vm.IsSaved)
+            {
+                var result = System.Windows.MessageBox.Show("You have unsaved changes. Would you like to save them?", "Unsaved Changes", MessageBoxButton.YesNoCancel);
+                if(result == MessageBoxResult.Yes)
+                {
+                    vm.Save(); 
+                }
+                else if(result == MessageBoxResult.Cancel)
+                {
+                    _window.CueList.SelectedItem = e.RemovedItems[0];
+                    newItem = false;
+                    return;
+                }
+            }
+            if(ShowRunner.SelectedCue != null && newItem)
+                _window.CueEditorWindow.DataContext = new CueEditorViewModel(ShowRunner.SelectedCue);
         }
 
         #region Other Event Listeners

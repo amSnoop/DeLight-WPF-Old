@@ -1,4 +1,5 @@
 ﻿using DeLightWPF.Models;
+using DeLightWPF.Models.Files;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,15 +19,12 @@ namespace DeLightWPF.Utilities
 
 
         public ScreenFile File { get; set; }
-        CueFile IRunnableVisualCue.File
-        {
-            get { return File; }
-            set { File = value as ScreenFile ?? throw (new InvalidCastException("CustomMediaElement did not receive a VideoFile file type. (Path=" + value.FilePath)); }
-        }
         public virtual double? Duration { get => NaturalDuration.HasTimeSpan ? NaturalDuration.TimeSpan.TotalSeconds : null; }
         public bool IsFadingOut { get; private set; } = false; //Used to prevent the fade out from being called multiple times
 
         private bool IsFadedOut { get => Opacity == 0; }
+        CueFile IRunnableVisualCue.File { get => File; }
+
         public CustomMediaElement(ScreenFile file) : base()
         {
             LoadedBehavior = MediaState.Manual;

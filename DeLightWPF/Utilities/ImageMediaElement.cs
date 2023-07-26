@@ -1,4 +1,5 @@
 ﻿using DeLightWPF.Models;
+using DeLightWPF.Models.Files;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,14 +67,17 @@ namespace DeLightWPF.Utilities
 
         public double? Duration => 0;
 
-        public CueFile File { get; set; } = new ScreenFile() { EndAction = EndAction.Freeze };
+        public BlackoutScreenFile File { get; }
+
+        CueFile IRunnableVisualCue.File => File;
 
         public event EventHandler? FadedIn;
         public event EventHandler? FadedOut;
         public event EventHandler? PlaybackEnded;
 
-        public BlackoutVisualCue()
+        public BlackoutVisualCue(BlackoutScreenFile file)
         {
+            File = file;
             HorizontalAlignment = HorizontalAlignment.Stretch;
             VerticalAlignment = VerticalAlignment.Stretch;
             Background = System.Windows.Media.Brushes.Black;
