@@ -11,7 +11,7 @@
         Height="720" 
         Width="1080"
         MinHeight="720"
-        MinWidth="1280"
+        MinWidth="1080"
         Background="#000"
         WindowStyle="SingleBorderWindow"
         BorderBrush="White"
@@ -35,7 +35,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Cue Editing Window -->
-        <windows:CueEditorPopup Grid.ColumnSpan="5" Panel.ZIndex="1" x:Name="CueEditorWindow" Visibility="Hidden">
+        <windows:CueEditorPopup Grid.ColumnSpan="5" Panel.ZIndex="1" x:Name="CueEditorWindow" Visibility="Visible">
             
         </windows:CueEditorPopup>
         <!-- Previewer / Cue Settings window -->

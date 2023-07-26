@@ -78,7 +78,6 @@ namespace DeLightWPF
                 double scaleFactor = 1 + Math.Log(_window.ActualHeight / 720.0);
                 double maxFontSize = 25;
                 double fontSize = Math.Max(Math.Min(baseFontSize * scaleFactor, maxFontSize), baseFontSize);
-                Console.WriteLine($"Font size: {fontSize}");
                 return fontSize;
             }
         }
