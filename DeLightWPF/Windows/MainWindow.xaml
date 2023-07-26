@@ -172,17 +172,17 @@
                                             <Setter Property="Background" Value="Transparent" />
                                         </DataTrigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#444" />
+                                            <Setter Property="Background" Value="{StaticResource TextDisabled}" />
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="#468" />
+                                            <Setter Property="Background" Value="{StaticResource AccentBrushDark}" />
                                         </Trigger>
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
                                                 <Condition Property="IsMouseOver" Value="True" />
                                                 <Condition Property="IsSelected" Value="True" />
                                             </MultiTrigger.Conditions>
-                                            <Setter Property="Background" Value="#579" />
+                                            <Setter Property="Background" Value="{StaticResource AccentBrushMed}" />
                                         </MultiTrigger>
                                         <DataTrigger Binding="{Binding IsActive}" Value="True">
                                             <Setter Property="Background" Value="{StaticResource AccentBrush}" />

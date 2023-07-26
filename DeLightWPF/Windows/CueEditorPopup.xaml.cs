@@ -34,7 +34,7 @@ namespace DeLightWPF.Windows
         {
             if (!(value is int monitorNumber)) return null;
 
-            return monitorNumber == 0 ? "Light Scene" : $"Monitor {monitorNumber}";
+            return monitorNumber == 0 ? "Light Scene" : $"Projector {monitorNumber}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

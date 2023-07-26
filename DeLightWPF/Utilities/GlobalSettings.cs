@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.Permissions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows;
@@ -21,8 +20,8 @@ namespace DeLightWPF.Utilities
         public string LastShowPath { get; set; } = "";
         public string VideoDirectory { get; set; } = "";
         public string LightShowDirectory { get; set; } = "";
-        private double lastVideoScreenTop { get; set; }
-        private double lastVideoScreenLeft { get; set; }
+        public double LastVideoScreenTop { get; private set; }
+        public double LastVideoScreenLeft { get; private set; }
         public int LastScreenTop { get; set; }
         public int LastScreenLeft { get; set; }
         public int NumProjectors { get; set; } = 1;
@@ -56,8 +55,8 @@ namespace DeLightWPF.Utilities
 
         public static void Save()
         {
-            Instance.lastVideoScreenTop = Instance.Screen?.Bounds.Top ?? 0;
-            Instance.lastVideoScreenLeft = Instance.Screen?.Bounds.Left ?? 0;
+            Instance.LastVideoScreenTop = Instance.Screen?.Bounds.Top ?? 0;
+            Instance.LastVideoScreenLeft = Instance.Screen?.Bounds.Left ?? 0;
             string json = JsonSerializer.Serialize(Instance);
             File.WriteAllText("settings.json", json);
         }
@@ -74,7 +73,7 @@ namespace DeLightWPF.Utilities
                 Console.WriteLine(e.StackTrace);
             }
             instance ??= new();
-            instance.Screen = Screen.AllScreens.Where(s => s.Bounds.Top == instance.lastVideoScreenTop && s.Bounds.Left == instance.lastVideoScreenLeft).FirstOrDefault() ?? Screen.PrimaryScreen;
+            instance.Screen = Screen.AllScreens.Where(s => s.Bounds.Top == instance.LastVideoScreenTop && s.Bounds.Left == instance.LastVideoScreenLeft).FirstOrDefault() ?? Screen.PrimaryScreen;
 
             var oldScreen = Screen.AllScreens.FirstOrDefault(s => s.Bounds.Contains(instance.LastScreenLeft, instance.LastScreenTop));
 

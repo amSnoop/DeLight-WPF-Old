@@ -17,7 +17,7 @@
             <RowDefinition Height="8*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border Grid.ColumnSpan="3" Grid.RowSpan="3" Background="#000" Opacity="0.9" >
+        <Border Grid.ColumnSpan="3" Grid.RowSpan="3" Background="#000" Opacity="0.6" >
         </Border>
         <Border Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#050505" >
             <Grid x:Name="CueSettings">
@@ -29,7 +29,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height=".1*" MinHeight="20"/>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" MinHeight="220"/>
                     <RowDefinition Height="*" />
                     <RowDefinition Height=".15*" MinHeight="20"/>
                 </Grid.RowDefinitions>
@@ -75,10 +75,12 @@
                     <TextBlock Grid.Row="8" Text="Cue Ending Behavior:" VerticalAlignment="Center"/>
                     <ComboBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"  SelectedValue="{Binding CueEndAction, Mode=TwoWay}" ItemsSource="{Binding DataContext.EndActionStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
                 </Grid>
-                <ListBox Grid.Row="3" Grid.Column="1" Background="#090909" ItemsSource="{Binding Files}" AlternationCount="127381237">
-                <ListBox.ItemTemplate>
+                <ItemsControl Grid.Row="3" Grid.Column="1" Background="#090909" ItemsSource="{Binding Files}" AlternationCount="127381237" >
+                <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Expander Header="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource MonitorNumberToTitleConverter}}" Foreground="Wheat">
+                            <Expander BorderBrush="White" Header="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource AncestorType=ContentPresenter}, Converter={StaticResource MonitorNumberToTitleConverter}}" Foreground="Wheat">
+                                <Expander.Resources>
+                                </Expander.Resources>
                                 <Grid Grid.Row="2" Grid.Column="1" x:Name="DefaultCueDisplay">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
@@ -114,16 +116,13 @@
                                     <TextBlock Grid.Row="6" Text="Volume:" VerticalAlignment="Center"/>
                                     <Slider Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Maximum="1" Minimum="0" TickFrequency="0.01" Value="{Binding Volume}"/>
 
-                                    <TextBlock Grid.Row="7" Text="Fade In Mode:" VerticalAlignment="Center"/>
-                                    <ComboBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedValue="{Binding FadeType, Mode=TwoWay}" ItemsSource="{Binding DataContext.FadeTypeStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
-
                                     <TextBlock Grid.Row="8" Text="Cue Ending Behavior:" VerticalAlignment="Center"/>
-                                    <ComboBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"  SelectedValue="{Binding CueEndAction, Mode=TwoWay}" ItemsSource="{Binding DataContext.EndActionStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
+                                    <ComboBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"  SelectedValue="{Binding EndAction, Mode=TwoWay}" ItemsSource="{Binding DataContext.EndActionStrings, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
                                 </Grid>
                             </Expander>
                     </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             </Grid>
         </Border>
     </Grid>
