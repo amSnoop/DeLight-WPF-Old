@@ -30,9 +30,9 @@ namespace DeLightWPF.Windows
     }
     public class MonitorNumberToTitleConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is int monitorNumber)) return null;
+            if (value is not int monitorNumber) return null;
 
             return monitorNumber == 0 ? "Light Scene" : $"Projector {monitorNumber}";
         }

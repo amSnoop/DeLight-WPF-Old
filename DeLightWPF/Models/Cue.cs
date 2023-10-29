@@ -63,19 +63,19 @@ namespace DeLightWPF.Models
 
         public Cue()
         {
-            Number = "0";
-            FadeInTime = 3;
-            FadeOutTime = 3;
-            Volume = .2;
-            Note = "New Cue";
-            Duration = 0;
-            CueEndAction = EndAction.FadeAfterEnd;
-            FadeType = FadeType.FadeOver;
-            ScreenFiles = new()
+            number = "0";
+            fadeInTime = 3;
+            fadeOutTime = 3;
+            volume = .2;
+            note = "New Cue";
+            duration = 0;
+            cueEndAction = EndAction.FadeAfterEnd;
+            fadeType = FadeType.FadeOver;
+            screenFiles = new()
             {
                 { 1, new BlackoutScreenFile(BlackoutReason.EmptyPath) }
             };
-            LightScene = new BlackoutLightFile(BlackoutReason.EmptyPath);
+            lightScene = new BlackoutLightFile(BlackoutReason.EmptyPath);
         }
 
         public bool SetScreenFile(int screenNumber, ScreenFile file)

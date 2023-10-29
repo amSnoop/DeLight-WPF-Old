@@ -1,5 +1,4 @@
 ﻿using DeLightWPF.Utilities;
-using LibUsbDotNet.DeviceNotify;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,11 +16,6 @@ namespace DeLightWPF
 
         private bool isDragging;
 
-        private IDeviceNotifier usbDeviceNotifier;
-
-        private readonly int vendor_id = 0x1069;
-        private readonly int product_id = 0x1040;
-
         public MainWindow()
         {
             WindowState = WindowState.Normal;
@@ -30,8 +24,6 @@ namespace DeLightWPF
             InitializeComponent();
             DataContext = new MainWindowViewModel(this);
 
-            usbDeviceNotifier = DeviceNotifier.OpenDeviceNotifier();
-            usbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent;
             PreviewKeyDown += OnKeyDown;
             SizeChanged += MainWindow_OnSizeChanged;
             MouseDown += MainWindow_MouseDown;
@@ -46,23 +38,6 @@ namespace DeLightWPF
             Keyboard.ClearFocus();
             Activate();
             Focus();
-        }
-
-        private void OnDeviceNotifyEvent(object? sender, DeviceNotifyEventArgs e)
-        {
-            if (e.Device.IdVendor == vendor_id && e.Device.IdProduct == product_id)
-            {
-                if (e.EventType == EventType.DeviceArrival)
-                {
-                    Console.WriteLine("Device connected.");
-                    // handle connection event
-                }
-                else if (e.EventType == EventType.DeviceRemoveComplete)
-                {
-                    Console.WriteLine("Device disconnected.");
-                    // handle disconnection event
-                }
-            }
         }
 
         protected override void OnClosed(EventArgs e) {

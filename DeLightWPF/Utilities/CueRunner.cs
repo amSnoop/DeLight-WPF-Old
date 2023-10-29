@@ -1,5 +1,6 @@
 ﻿using DeLightWPF.Models;
 using DeLightWPF.Models.Files;
+using DeLightWPF.Utilities.LightingOutput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,72 +10,6 @@ using System.Windows;
 
 namespace DeLightWPF.Utilities
 {
-
-    public class Light : IRunnableVisualCue
-    {
-        public double? Duration =>/* Math.Round(new Random().NextDouble() * 10, 1)*/ 1;
-        public LightFile File { get; }
-
-        CueFile IRunnableVisualCue.File => File;
-
-        public Light(LightFile lf)
-        {
-            File = lf;
-        }
-        public double Opacity { get; set; }
-
-        public bool IsFadingOut => false;
-
-        public event EventHandler? FadedIn;
-        public event EventHandler? FadedOut;
-        public event EventHandler? PlaybackEnded;
-
-        public void ClearCurrentAnimations()
-        {
-            Console.WriteLine("ClearCurrentAnimations() called on Light");
-        }
-
-        public void FadeIn(double duration = -1)
-        {
-            Console.WriteLine("FadeIn() called on Light");
-        }
-
-        public void FadeOut(double duration = -1)
-        {
-           Console.WriteLine("FadeOut() called on Light");
-        }
-
-        public Task LoadAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        public void Pause()
-        {
-            Console.WriteLine("Pause() called on Light");
-        }
-
-        public void Play()
-        {
-            Console.WriteLine("Play() called on Light");
-        }
-
-        public void SeekTo(double time)
-        {
-           Console.WriteLine("SeekTo() called on Light");
-        }
-
-        public void Stop()
-        {
-            Console.WriteLine("Stop() called on Light");
-        }
-
-        public void Restart()
-        {
-            Console.WriteLine("Restart() called on Light");
-        }
-    }
-
     public class CueRunner
     {
         private readonly double OPACITY_FULL = 1;//chatGPT doesn't like magic numbers, and GPT is my code reviewer, so here we are
@@ -101,7 +36,7 @@ namespace DeLightWPF.Utilities
             VideoWindow = videoWindow;
             Timer = new System.Timers.Timer(GlobalSettings.TickRate);
             Timer.Elapsed += Timer_Tick;
-            Light l = new(cue.LightScene);
+            LightCue l = new(cue.LightScene, Cue.FadeType);
             VisualCues.Add(l);
             DetermineFileEndingEvent(l);
             foreach (var sf in cue.ScreenFiles.Values)

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DeLightWPF.Models;
 using DeLightWPF.Models.Files;
+using DeLightWPF.Utilities.LightingOutput;
 using System;
 using System.Collections.Generic;
 using System.Linq;

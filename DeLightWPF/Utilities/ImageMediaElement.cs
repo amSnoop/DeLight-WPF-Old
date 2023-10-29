@@ -14,7 +14,7 @@ namespace DeLightWPF.Utilities
 {
     public class ImageMediaElement : CustomMediaElement
     {
-        Timer timer = new(GlobalSettings.TickRate);
+        private readonly Timer timer = new(GlobalSettings.TickRate);
         int elapsedTicks = 0;
         public override double? Duration => ((ImageFile)File).Duration;
         public ImageMediaElement(ImageFile file) : base(file)

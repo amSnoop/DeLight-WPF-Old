@@ -23,10 +23,12 @@ namespace DeLightWPF
         public bool VideoIsVisible => VideoWindow.IsVisible;
         public VideoWindow VideoWindow { get; set; } = new();
 
-        private DispatcherTimer _timer = new();
+        private readonly DispatcherTimer _timer = new();
         private int _timerInterval = 50;
         private int _totalTicks = 0;
         private bool foundDuration = false;
+
+
         #region Observable Properties
 
         [ObservableProperty]
@@ -66,8 +68,6 @@ namespace DeLightWPF
         };
 
 
-
-
         #region Font Size Properties
 
         public double BodyFontSize
@@ -98,14 +98,10 @@ namespace DeLightWPF
 
         #endregion
 
-        #region Non [ObservableProperty] Properties that send updates to the view
-
-        #endregion
-
         public MainWindowViewModel(MainWindow window)
         {
-            ShowRunner = new(Show.Load(GlobalSettings.Instance.LastShowPath), VideoWindow);
-            ShowRunner.PropertyChanged += ActiveCueChanged;
+            showRunner = new(Show.Load(GlobalSettings.Instance.LastShowPath), VideoWindow);
+            showRunner.PropertyChanged += ActiveCueChanged;
             _window = window;
             _screenObjects = Screen.AllScreens.ToList();
             Monitors = _screenObjects.Select((s, i) => $"Monitor {i + 1}: {s.Bounds.Width}x{s.Bounds.Height}").ToList();
@@ -129,7 +125,6 @@ namespace DeLightWPF
 
         private void CueList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            bool newItem = true;
             if(_window.CueEditorWindow.DataContext is CueEditorViewModel vm && !vm.IsSaved)
             {
                 var result = System.Windows.MessageBox.Show("You have unsaved changes. Would you like to save them?", "Unsaved Changes", MessageBoxButton.YesNoCancel);
@@ -140,11 +135,10 @@ namespace DeLightWPF
                 else if(result == MessageBoxResult.Cancel)
                 {
                     _window.CueList.SelectedItem = e.RemovedItems[0];
-                    newItem = false;
                     return;
                 }
             }
-            if(ShowRunner.SelectedCue != null && newItem)
+            if(ShowRunner.SelectedCue != null)
                 _window.CueEditorWindow.DataContext = new CueEditorViewModel(ShowRunner.SelectedCue);
         }
 

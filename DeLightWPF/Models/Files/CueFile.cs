@@ -41,10 +41,10 @@ namespace DeLightWPF.Models.Files
 
         public CueFile()
         {
-            FilePath = "";
-            EndAction = EndAction.Freeze;
-            FadeInDuration = 3;
-            FadeOutDuration = 3;
+            filePath = "";
+            endAction = EndAction.Freeze;
+            fadeInDuration = 3;
+            fadeOutDuration = 3;
         }
     }
 }
